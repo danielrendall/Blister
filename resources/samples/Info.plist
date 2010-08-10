@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array/>
+			<key>CFBundleTypeIconFile</key>
+			<string>ItunesLibraryfile.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>itunes/libraryfile</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>TEXT</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array/>
+			<key>CFBundleTypeIconFile</key>
+			<string>DJ1800Preferences.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>DJ-1800 preferences</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>DJpr</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array/>
+			<key>CFBundleTypeIconFile</key>
+			<string>DJ1800SongDatabase.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>DJ-1800 song database</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>Vdsc</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>plugin</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>DJ1800ControllerPlugin.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>DJ-1800 controller plugin</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>BNDL</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleExecutable</key>
+	<string>DJ-1800 3.2.2</string>
+	<key>CFBundleGetInfoString</key>
+	<string>3.2.2</string>
+	<key>CFBundleHelpBookFolder</key>
+	<string>DJ-1800 Help</string>
+	<key>CFBundleHelpBookName</key>
+	<string>DJ-1800 Help</string>
+	<key>CFBundleIconFile</key>
+	<string>DJ-1800 3.2.2.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.dj1800.dj1800</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>en</string>
+		<string>da</string>
+		<string>nl</string>
+		<string>fi</string>
+		<string>fr</string>
+		<string>de</string>
+		<string>it</string>
+		<string>ja</string>
+		<string>ko</string>
+		<string>no</string>
+		<string>pl</string>
+		<string>pt</string>
+		<string>ru</string>
+		<string>es</string>
+		<string>sv</string>
+		<string>zh_CN</string>
+		<string>zh_TW</string>
+	</array>
+	<key>CFBundleName</key>
+	<string>DJ-1800 3.2.2</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>3.2.2</string>
+	<key>CFBundleSignature</key>
+	<string>DJ18</string>
+	<key>CFBundleVersion</key>
+	<string>3.2.2.0</string>
+</dict>
+</plist>
