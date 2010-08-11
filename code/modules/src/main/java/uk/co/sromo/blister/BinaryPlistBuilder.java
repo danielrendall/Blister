@@ -17,20 +17,16 @@ import java.util.Locale;
  */
 public class BinaryPlistBuilder {
 
-    public final static int MAGIC_1 = 0x62706c69; // bpli
-    public final static int MAGIC_2 = 0x73743030; // st00
+    public final static long MAGIC_1 = 0x62706c69; // bpli
+    public final static long MAGIC_2 = 0x73743030; // st00
 
     private final static Formatter formatter = new Formatter(Locale.UK);
 
 
-    private final byte[] header;
-    private final byte[] data;
-    private final byte[] trailer;
+    private final ByteArrayWrapper header;
+    private final ByteArrayWrapper data;
+    private final ByteArrayWrapper trailer;
 
-    private final int length;
-    private int headerPos;
-    private int dataPos;
-    private int trailerPos;
     private final static Logger log = Logger.getLogger(BinaryPlistBuilder.class);
 
     private final static short NULL =               (short)0x00;
@@ -54,37 +50,61 @@ public class BinaryPlistBuilder {
     private final static short UNUSED_5 =           (short)0xf0; // mask
 
     private final List<BPItem> items = new ArrayList<BPItem>();
+    private short _sortVersion;
+    private short _offsetIntSize;
+    private short _objectRefSize;
+    private long _numObjects;
+    private long _topObject;
+    private long _offsetTableOffset;
 
 
     public BinaryPlistBuilder(byte[] plist) throws Exception {
         if (plist.length < 40) {
             throw new Exception("PList not long enough");
         }
-        this.length = plist.length - 40;
+        int length = plist.length - 40;
 
-        this.header = new byte[8];
-        this.data = new byte[this.length];
-        this.trailer = new byte[32];
+        byte[] headerBytes = new byte[8];
+        byte[] dataBytes = new byte[length];
+        byte[] trailerBytes = new byte[32];
 
-        System.arraycopy(plist, 0, this.header, 0, 8);
-        System.arraycopy(plist, 8, this.data, 0, this.length);
-        System.arraycopy(plist, 8 + this.length, this.trailer, 0, 32);
-        headerPos = 0;
-        dataPos = 0;
-        trailerPos = 0;
+        System.arraycopy(plist, 0, headerBytes, 0, 8);
+        System.arraycopy(plist, 8, dataBytes, 0, length);
+        System.arraycopy(plist, 8 + length, trailerBytes, 0, 32);
+
+        this.header = new ByteArrayWrapper(headerBytes);
+        this.data = new ByteArrayWrapper(dataBytes);
+        this.trailer = new ByteArrayWrapper(trailerBytes);
+    }
+
+    public void dump() {
+        log.info("Header:");
+        header.dump();
+        log.info("Data:");
+        data.dump();
+        log.info("Trailer:");
+        trailer.dump();
     }
 
     public boolean decode() {
-        int first = readHeaderInt();
-        int second = readHeaderInt();
+        long first = header.readInt();
+        long second = header.readInt();
         if ((first != MAGIC_1) || (second != MAGIC_2)) {
             log.warn("Magic numbers wrong - were " + formatter.format("%1$2x %2$2x", first, second));
             log.warn("Magic numbers wrong - were " + first + " " + second);
             return false;
         }
 
-        while (dataPos < length) {
-            short next = readByte();
+        readTrailer();
+        log.info("_sortVersion: " + _sortVersion);
+        log.info("_offsetIntSize: " + _offsetIntSize);
+        log.info("_objectRefSize: " + _objectRefSize);
+        log.info("_numObjects: " + _numObjects);
+        log.info("_topObject: " + _topObject);
+        log.info("_offsetTableOffset: " + _offsetTableOffset);
+
+        while (data.hasMore()) {
+            short next = data.readByte();
             switch (next) {
                 case NULL:
                     log.debug("Null");
@@ -104,9 +124,7 @@ public class BinaryPlistBuilder {
                     break;
                 case DATE:
                     log.debug("Date");
-                    byte[] dateData = new byte[8];
-                    System.arraycopy(data, dataPos, dateData, 0, 8);
-                    dataPos += 8;
+                    byte[] dateData = data.get(8);
                     items.add(new BPDate(dateData));
                     break;
                 default:
@@ -116,44 +134,34 @@ public class BinaryPlistBuilder {
                         case INT:
                             int numIntBytes = 2^littleNibble;
                            log.debug(String.format("Int %d bytes", numIntBytes));
-                            byte[] intData = new byte[numIntBytes];
-                            System.arraycopy(data, dataPos, intData, 0, numIntBytes);
-                            dataPos += numIntBytes;
+                            byte[] intData = data.get(numIntBytes);
                             items.add(new BPInt(intData));
                             break;
                         case REAL:
                             int numRealBytes = 2^littleNibble;
                             log.debug(String.format("Real %d bytes", numRealBytes));
-                            byte[] realData = new byte[numRealBytes];
-                            System.arraycopy(data, dataPos, realData, 0, numRealBytes);
-                            dataPos += numRealBytes;
+                            byte[] realData = data.get(numRealBytes);
                             items.add(new BPInt(realData));
                             break;
                         case DATA:
-                            int numDataBytes = (littleNibble < 0x0f) ? littleNibble : readCount();
+                            int numDataBytes = (littleNibble < 0x0f) ? littleNibble : data.readByte();
                             log.debug(String.format("Data %d bytes", numDataBytes));
-                            byte[] dataData = new byte[numDataBytes];
-                            System.arraycopy(data, dataPos, dataData, 0, numDataBytes);
-                            dataPos += numDataBytes;
+                            byte[] dataData = data.get(numDataBytes);
                             items.add(new BPData(dataData));
                             break;
                         case STRING_ASCII:
-                            int numStringAsciiChars = (littleNibble < 0x0f) ? littleNibble : readCount();
+                            int numStringAsciiChars = (littleNibble < 0x0f) ? littleNibble : data.readByte();
                             log.debug(String.format("String_Ascii %d chars", numStringAsciiChars));
-                            byte[] stringAsciiData = new byte[numStringAsciiChars];
-                            System.arraycopy(data, dataPos, stringAsciiData, 0, numStringAsciiChars);
-                            dataPos += numStringAsciiChars;
+                            byte[] stringAsciiData = data.get(numStringAsciiChars);
                             final BPStringAscii bpStringAscii = new BPStringAscii(stringAsciiData);
                             log.debug("String: " + bpStringAscii.getData());
                             items.add(bpStringAscii);
 
                             break;
                         case STRING_UNICODE:
-                            int numStringUnicodeChars = (littleNibble < 0x0f) ? littleNibble : readCount();
+                            int numStringUnicodeChars = (littleNibble < 0x0f) ? littleNibble : data.readByte();
                             log.debug(String.format("String_Unicode %d chars", numStringUnicodeChars));
-                            byte[] stringUnicodeData = new byte[numStringUnicodeChars << 1];
-                            System.arraycopy(data, dataPos, stringUnicodeData, 0, numStringUnicodeChars << 1);
-                            dataPos += numStringUnicodeChars << 1;
+                            byte[] stringUnicodeData = data.get(numStringUnicodeChars << 1);
                             final BPStringUnicode bpStringUnicode = new BPStringUnicode(stringUnicodeData);
                             log.debug("String: " + bpStringUnicode.getData());
                             items.add(bpStringUnicode);
@@ -161,28 +169,26 @@ public class BinaryPlistBuilder {
                         case UID:
                             int numUidBytes = littleNibble + 1;
                             log.debug(String.format("UID %d bytes", numUidBytes));
-                            byte[] uidData = new byte[numUidBytes];
-                            System.arraycopy(data, dataPos, uidData, 0, numUidBytes);
-                            dataPos += numUidBytes;
+                            byte[] uidData = data.get(numUidBytes);
                             items.add(new BPUid(uidData));
                            break;
                         case ARRAY:
-                            int numArrayItems = (littleNibble < 0x0f) ? littleNibble : readCount();
+                            int numArrayItems = (littleNibble < 0x0f) ? littleNibble : data.readByte();
                             log.debug(String.format("Array %d items", numArrayItems));
                             items.add(new BPArray());
-                            dataPos += numArrayItems * 2;
+                            data.skip(numArrayItems * 2);
                             break;
                         case SET:
-                            int numSetItems = (littleNibble < 0x0f) ? littleNibble : readCount();
+                            int numSetItems = (littleNibble < 0x0f) ? littleNibble : data.readByte();
                             log.debug(String.format("Set %d items", numSetItems));
                             items.add(new BPSet());
-                            dataPos += numSetItems * 2;
+                            data.skip(numSetItems * 2);
                             break;
                         case DICT:
-                            int numDictItems = (littleNibble < 0x0f) ? littleNibble : readCount();
+                            int numDictItems = (littleNibble < 0x0f) ? littleNibble : data.readByte();
                             log.debug(String.format("Dict %d items", numDictItems));
                             items.add(new BPDict());
-                            dataPos += numDictItems * 2;
+                            data.skip(numDictItems * 2);
                             break;
                         default:
                             log.debug("Unused");
@@ -196,39 +202,28 @@ public class BinaryPlistBuilder {
         return true;
     }
 
-    public void dump() {
-        StringBuilder sb = new StringBuilder();
-        while (dataPos < length) {
-            sb.append(Short.toString(readByte())).append(",");
-            if (dataPos %16 == 0) {
-                log.debug(sb.toString());
-                sb = new StringBuilder();
-            }
-        }
-        log.debug(sb.toString());
-        dataPos = 0;
-    }
 
-    private short readByte() {
-        return (short) (0x000000FF &  (int)data[dataPos++]);
-    }
 
-    private int readCount() {
-        return readByte();
+    /**
+     * http://www.opensource.apple.com/source/CF/CF-550/ForFoundationOnly.h
+     *
+     * typedef struct {
+     * uint8_t	_unused[5];
+     * uint8_t     _sortVersion;
+     * uint8_t	_offsetIntSize;
+     * uint8_t	_objectRefSize;
+     * uint64_t	_numObjects;
+     * uint64_t	_topObject;
+     * uint64_t	_offsetTableOffset;
+     * } CFBinaryPlistTrailer;
+     */
+    private void readTrailer() {
+        trailer.skip(5);
+        _sortVersion = trailer.readByte();
+        _offsetIntSize = trailer.readByte();
+        _objectRefSize = trailer.readByte();
+        _numObjects = trailer.readLong();
+        _topObject = trailer.readLong();
+        _offsetTableOffset = trailer.readLong();
     }
-
-    private int readHeaderInt() {
-        return ((0x000000FF & (int)header[headerPos++]) << 24) |
-                ((0x000000FF & (int)header[headerPos++]) << 16) |
-                ((0x000000FF & (int)header[headerPos++]) << 8) |
-                (0x000000FF & (int)header[headerPos++]);
-    }
-
-    private int readDataInt() {
-        return ((0x000000FF & (int)data[dataPos++]) << 24) |
-                ((0x000000FF & (int)data[dataPos++]) << 16) |
-                ((0x000000FF & (int)data[dataPos++]) << 8) |
-                (0x000000FF & (int)data[dataPos++]);
-    }
-
 }
