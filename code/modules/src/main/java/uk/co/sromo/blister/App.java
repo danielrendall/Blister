@@ -11,7 +11,7 @@ import java.io.IOException;
  *
  */
 public class App {
-    public static String BINARY_PLIST = "/home/daniel/Development/Blister/resources/samples/Binary.plist";
+    public static String BINARY_PLIST = "/home/daniel/Development/Blister/resources/samples/BinaryInfo.plist";
     private final static Logger log = Logger.getLogger(App.class);
 
 

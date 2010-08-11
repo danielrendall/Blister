@@ -13,12 +13,13 @@ import java.nio.charset.Charset;
  * To change this template use File | Settings | File Templates.
  */
 public class BPStringUnicode implements BPItem {
-    private final Charset UTF16 = Charset.forName("UTF16");
+    private final Charset UTF8 = Charset.forName("UTF8");
 
     private final String data;
 
     public BPStringUnicode(byte[] data) {
-        this.data = UTF16.decode(ByteBuffer.wrap(data)).toString();
+
+        this.data = UTF8.decode(ByteBuffer.wrap(data)).toString();
     }
 
     public String getData() {

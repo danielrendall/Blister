@@ -150,7 +150,7 @@ public class BinaryPlistBuilder {
                             items.add(new BPData(dataData));
                             break;
                         case STRING_ASCII:
-                            int numStringAsciiChars = (littleNibble < 0x0f) ? littleNibble : data.readByte();
+                            int numStringAsciiChars = (littleNibble < 0x0f) ? littleNibble : (data.readShort() & 0x0fff);
                             log.debug(String.format("String_Ascii %d chars", numStringAsciiChars));
                             byte[] stringAsciiData = data.get(numStringAsciiChars);
                             final BPStringAscii bpStringAscii = new BPStringAscii(stringAsciiData);
@@ -159,7 +159,7 @@ public class BinaryPlistBuilder {
 
                             break;
                         case STRING_UNICODE:
-                            int numStringUnicodeChars = (littleNibble < 0x0f) ? littleNibble : data.readByte();
+                            int numStringUnicodeChars = (littleNibble < 0x0f) ? littleNibble :(data.readShort() & 0x0fff);
                             log.debug(String.format("String_Unicode %d chars", numStringUnicodeChars));
                             byte[] stringUnicodeData = data.get(numStringUnicodeChars << 1);
                             final BPStringUnicode bpStringUnicode = new BPStringUnicode(stringUnicodeData);
