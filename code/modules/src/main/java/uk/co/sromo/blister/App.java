@@ -4,7 +4,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Hello world!
@@ -19,7 +18,7 @@ public class App {
         File f = new File(BINARY_PLIST);
         byte[] bytes = FileUtils.readFileToByteArray(f);
         log.debug("There were " + bytes.length + " bytes");
-        BinaryPlistBuilder bp = new BinaryPlistBuilder(bytes);
+        BinaryPlistDecoder bp = new BinaryPlistDecoder(bytes);
         bp.dump();
         bp.decode();
     }

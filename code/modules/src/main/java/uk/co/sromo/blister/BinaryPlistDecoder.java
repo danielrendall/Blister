@@ -15,7 +15,7 @@ import java.util.Locale;
  * Time: 20:49:01
  * To change this template use File | Settings | File Templates.
  */
-public class BinaryPlistBuilder {
+public class BinaryPlistDecoder {
 
     public final static long MAGIC_1 = 0x62706c69; // bpli
     public final static long MAGIC_2 = 0x73743030; // st00
@@ -27,7 +27,7 @@ public class BinaryPlistBuilder {
     private final ByteArrayWrapper data;
     private final ByteArrayWrapper trailer;
 
-    private final static Logger log = Logger.getLogger(BinaryPlistBuilder.class);
+    private final static Logger log = Logger.getLogger(BinaryPlistDecoder.class);
 
     private final static short NULL = (short) 0x00;
     private final static short BOOL_FALSE = (short) 0x08;
@@ -58,7 +58,7 @@ public class BinaryPlistBuilder {
     private long _offsetTableOffset;
 
 
-    public BinaryPlistBuilder(byte[] plist) throws Exception {
+    public BinaryPlistDecoder(byte[] plist) throws Exception {
         if (plist.length < 40) {
             throw new Exception("PList not long enough");
         }
@@ -215,7 +215,6 @@ public class BinaryPlistBuilder {
         }
         int numIntBytes = twoToThe(littleNibble);
         byte[] intData = data.get(numIntBytes);
-        log.debug("Little nibble is " + littleNibble + " so int is " + numIntBytes + " bytes");
         BPInt ret = new BPInt(intData);
         return ret.getData();
     }
