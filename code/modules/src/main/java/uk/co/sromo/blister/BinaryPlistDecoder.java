@@ -23,9 +23,10 @@ public class BinaryPlistDecoder {
     private final static Formatter formatter = new Formatter(Locale.UK);
 
 
-    private final ByteArrayWrapper header;
+    private final BinaryPlistHeader header;
+    private final BinaryPlistTrailer trailer;
     private final ByteArrayWrapper data;
-    private final ByteArrayWrapper trailer;
+    private final ByteArrayWrapper offsetTable;
 
     private final static Logger log = Logger.getLogger(BinaryPlistDecoder.class);
 
@@ -50,58 +51,60 @@ public class BinaryPlistDecoder {
     private final static short UNUSED_5 = (short) 0xf0; // mask
 
     private final List<BPItem> items = new ArrayList<BPItem>();
-    private short _sortVersion;
-    private short _offsetIntSize;
-    private short _objectRefSize;
-    private long _numObjects;
-    private long _topObject;
-    private long _offsetTableOffset;
 
-
-    public BinaryPlistDecoder(byte[] plist) throws Exception {
+    public static BinaryPlistDecoder create(byte[] plist) throws Exception {
         if (plist.length < 40) {
             throw new Exception("PList not long enough");
         }
-        int length = plist.length - 40;
 
         byte[] headerBytes = new byte[8];
-        byte[] dataBytes = new byte[length];
         byte[] trailerBytes = new byte[32];
 
         System.arraycopy(plist, 0, headerBytes, 0, 8);
-        System.arraycopy(plist, 8, dataBytes, 0, length);
-        System.arraycopy(plist, 8 + length, trailerBytes, 0, 32);
+        System.arraycopy(plist, plist.length - 32, trailerBytes, 0, 32);
 
-        this.header = new ByteArrayWrapper(headerBytes);
-        this.data = new ByteArrayWrapper(dataBytes);
-        this.trailer = new ByteArrayWrapper(trailerBytes);
+        BinaryPlistHeader header = BinaryPlistHeader.build(headerBytes);
+        BinaryPlistTrailer trailer = BinaryPlistTrailer.build(trailerBytes);
+
+        int offset = (int) trailer.getOffsetTableOffset();
+
+        int dataLength = offset - 8;
+        int offsetTableLength = plist.length - 32 - offset;
+
+        byte[] dataBytes = new byte[dataLength];
+        System.arraycopy(plist, 8, dataBytes, 0, dataLength);
+
+        byte[] offsetTableBytes = new byte[offsetTableLength];
+        System.arraycopy(plist, offset, offsetTableBytes, 0, offsetTableLength);
+
+        return new BinaryPlistDecoder(header, trailer, dataBytes, offsetTableBytes);
+
+    }
+
+    public BinaryPlistDecoder(BinaryPlistHeader header, BinaryPlistTrailer trailer, byte[] data, byte[] offsetTable) throws Exception {
+
+
+        this.header = header;
+        this.data = new ByteArrayWrapper(data);
+        this.offsetTable = new ByteArrayWrapper(offsetTable);
+        this.trailer = trailer;
     }
 
     public void dump() {
         log.info("Header:");
-        header.dump();
         log.info("Data:");
         data.dump();
         log.info("Trailer:");
-        trailer.dump();
     }
 
     public boolean decode() {
-        long first = header.readInt();
-        long second = header.readInt();
-        if ((first != MAGIC_1) || (second != MAGIC_2)) {
-            log.warn("Magic numbers wrong - were " + formatter.format("%1$2x %2$2x", first, second));
-            log.warn("Magic numbers wrong - were " + first + " " + second);
-            return false;
-        }
 
-        readTrailer();
-        log.info("_sortVersion: " + _sortVersion);
-        log.info("_offsetIntSize: " + _offsetIntSize);
-        log.info("_objectRefSize: " + _objectRefSize);
-        log.info("_numObjects: " + _numObjects);
-        log.info("_topObject: " + _topObject);
-        log.info("_offsetTableOffset: " + _offsetTableOffset);
+        log.info("_sortVersion: " + trailer.getSortVersion());
+        log.info("_offsetIntSize: " + trailer.getOffsetIntSize());
+        log.info("_objectRefSize: " + trailer.getObjectRefSize());
+        log.info("_numObjects: " + trailer.getNumObjects());
+        log.info("_topObject: " + trailer.getTopObject());
+        log.info("_offsetTableOffset: " + trailer.getOffsetTableOffset());
 
         while (data.hasMore()) {
             short next = data.readByte();
@@ -258,26 +261,4 @@ public class BinaryPlistDecoder {
         }
     }
 
-    /**
-     * http://www.opensource.apple.com/source/CF/CF-550/ForFoundationOnly.h
-     * <p/>
-     * typedef struct {
-     * uint8_t	_unused[5];
-     * uint8_t     _sortVersion;
-     * uint8_t	_offsetIntSize;
-     * uint8_t	_objectRefSize;
-     * uint64_t	_numObjects;
-     * uint64_t	_topObject;
-     * uint64_t	_offsetTableOffset;
-     * } CFBinaryPlistTrailer;
-     */
-    private void readTrailer() {
-        trailer.skip(5);
-        _sortVersion = trailer.readByte();
-        _offsetIntSize = trailer.readByte();
-        _objectRefSize = trailer.readByte();
-        _numObjects = trailer.readLong();
-        _topObject = trailer.readLong();
-        _offsetTableOffset = trailer.readLong();
-    }
 }
