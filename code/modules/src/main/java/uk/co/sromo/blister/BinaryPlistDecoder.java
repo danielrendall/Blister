@@ -24,6 +24,7 @@ public class BinaryPlistDecoder {
 
 
     private final BinaryPlistHeader header;
+    private final BinaryPlistOffsetReader offsetReader;
     private final BinaryPlistTrailer trailer;
     private final ByteArrayWrapper data;
     private final BinaryPlistOffsetTable offsetTable;
@@ -78,17 +79,21 @@ public class BinaryPlistDecoder {
         System.arraycopy(plist, offset, offsetTableBytes, 0, offsetTableLength);
         BinaryPlistOffsetTable offsetTable = BinaryPlistOffsetTable.build(offsetTableBytes, trailer.getOffsetIntSize());
 
-        return new BinaryPlistDecoder(header, trailer, dataBytes, offsetTable);
+        BinaryPlistOffsetReader offsetReader = BinaryPlistOffsetReader.create(trailer.getObjectRefSize());
+        
+
+        return new BinaryPlistDecoder(header, trailer, dataBytes, offsetTable, offsetReader);
 
     }
 
-    public BinaryPlistDecoder(BinaryPlistHeader header, BinaryPlistTrailer trailer, byte[] data, BinaryPlistOffsetTable offsetTable) throws Exception {
+    public BinaryPlistDecoder(BinaryPlistHeader header, BinaryPlistTrailer trailer, byte[] data, BinaryPlistOffsetTable offsetTable, BinaryPlistOffsetReader offsetReader) throws Exception {
 
 
         this.header = header;
         this.data = new ByteArrayWrapper(data);
         this.offsetTable = offsetTable;
         this.trailer = trailer;
+        this.offsetReader = offsetReader;
     }
 
     public void dump() {

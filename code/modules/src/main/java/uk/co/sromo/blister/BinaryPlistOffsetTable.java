@@ -27,7 +27,7 @@ public class BinaryPlistOffsetTable {
 
         for (int i=0; i < numberOfOffsets; i++) {
             System.arraycopy(data, i * offsetSize, buffer, 0, offsetSize);
-            offsetArray[i] = new BPInt(buffer).getData();
+            offsetArray[i] = new BPInt(buffer).getData() - 8; // offsets relative to start of data
         }
         return new BinaryPlistOffsetTable(offsetArray);
     }
