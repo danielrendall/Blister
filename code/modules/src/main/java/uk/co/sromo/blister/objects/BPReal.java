@@ -9,5 +9,12 @@ import uk.co.sromo.blister.BPItem;
  * Time: 21:43:11
  * To change this template use File | Settings | File Templates.
  */
-public class BPReal implements BPItem {
+public class BPReal extends BPItem {
+    private final double data;
+
+    public BPReal(byte[] bytes) {
+        // TODO - fixme
+        data = 0.0d;
+    }
 }
+

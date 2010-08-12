@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
  * Time: 21:44:21
  * To change this template use File | Settings | File Templates.
  */
-public class BPStringUnicode implements BPItem {
+public class BPStringUnicode extends BPItem {
     private final Charset UTF8 = Charset.forName("UTF8");
 
     private final String data;

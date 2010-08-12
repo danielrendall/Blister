@@ -81,4 +81,8 @@ public class ByteArrayWrapper {
     public int getLength() {
         return length;
     }
+
+    public void setPosition(int position) {
+        this.pos = position;
+    }
 }

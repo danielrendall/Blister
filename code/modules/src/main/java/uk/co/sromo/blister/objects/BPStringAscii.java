@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
  * Time: 21:44:01
  * To change this template use File | Settings | File Templates.
  */
-public class BPStringAscii implements BPItem {
+public class BPStringAscii extends BPItem {
     private final Charset ASCII = Charset.forName("ASCII");
 
     private final String data;

@@ -9,7 +9,7 @@ import uk.co.sromo.blister.BPItem;
  * Time: 21:43:27
  * To change this template use File | Settings | File Templates.
  */
-public class BPDate implements BPItem {
+public class BPDate extends BPItem {
     
     private final byte[] data;
 

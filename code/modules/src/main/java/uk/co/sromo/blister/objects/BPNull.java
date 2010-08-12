@@ -9,5 +9,8 @@ import uk.co.sromo.blister.BPItem;
  * Time: 21:39:35
  * To change this template use File | Settings | File Templates.
  */
-public class BPNull implements BPItem {
+public class BPNull extends BPItem {
+
+    public final static BPNull Instance = new BPNull();
+    private BPNull() {};
 }

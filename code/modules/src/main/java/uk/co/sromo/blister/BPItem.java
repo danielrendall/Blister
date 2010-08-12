@@ -1,5 +1,7 @@
 package uk.co.sromo.blister;
 
+import java.util.Map;
+
 /**
  * Created by IntelliJ IDEA.
  * User: daniel
@@ -7,5 +9,13 @@ package uk.co.sromo.blister;
  * Time: 21:40:06
  * To change this template use File | Settings | File Templates.
  */
-public interface BPItem {
+public abstract class BPItem {
+
+    public void expand(BinaryPlistDecoder decoder) {
+        // nothing to do
+    }
+
+    public boolean isExpanded() {
+        return true;
+    }
 }

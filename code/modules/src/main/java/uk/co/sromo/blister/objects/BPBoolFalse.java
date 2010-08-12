@@ -9,7 +9,7 @@ import uk.co.sromo.blister.BPItem;
  * Time: 21:41:12
  * To change this template use File | Settings | File Templates.
  */
-public class BPBoolFalse implements BPItem {
+public class BPBoolFalse extends BPItem {
 
     public final static BPBoolFalse Instance = new BPBoolFalse();
     private BPBoolFalse() {};

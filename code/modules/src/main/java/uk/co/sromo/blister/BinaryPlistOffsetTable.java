@@ -41,6 +41,10 @@ public class BinaryPlistOffsetTable {
         return offsets[offset];
     }
 
+    public int get(long offset) {
+        return offsets[(int)offset];
+    }
+
     public int getSize() {
         return size;
     }
