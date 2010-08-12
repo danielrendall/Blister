@@ -77,4 +77,8 @@ public class ByteArrayWrapper {
     public boolean hasMore() {
         return pos < length;
     }
+
+    public int getLength() {
+        return length;
+    }
 }

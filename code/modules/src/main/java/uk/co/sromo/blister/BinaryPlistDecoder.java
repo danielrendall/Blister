@@ -26,7 +26,7 @@ public class BinaryPlistDecoder {
     private final BinaryPlistHeader header;
     private final BinaryPlistTrailer trailer;
     private final ByteArrayWrapper data;
-    private final ByteArrayWrapper offsetTable;
+    private final BinaryPlistOffsetTable offsetTable;
 
     private final static Logger log = Logger.getLogger(BinaryPlistDecoder.class);
 
@@ -76,35 +76,38 @@ public class BinaryPlistDecoder {
 
         byte[] offsetTableBytes = new byte[offsetTableLength];
         System.arraycopy(plist, offset, offsetTableBytes, 0, offsetTableLength);
+        BinaryPlistOffsetTable offsetTable = BinaryPlistOffsetTable.build(offsetTableBytes, trailer.getOffsetIntSize());
 
-        return new BinaryPlistDecoder(header, trailer, dataBytes, offsetTableBytes);
+        return new BinaryPlistDecoder(header, trailer, dataBytes, offsetTable);
 
     }
 
-    public BinaryPlistDecoder(BinaryPlistHeader header, BinaryPlistTrailer trailer, byte[] data, byte[] offsetTable) throws Exception {
+    public BinaryPlistDecoder(BinaryPlistHeader header, BinaryPlistTrailer trailer, byte[] data, BinaryPlistOffsetTable offsetTable) throws Exception {
 
 
         this.header = header;
         this.data = new ByteArrayWrapper(data);
-        this.offsetTable = new ByteArrayWrapper(offsetTable);
+        this.offsetTable = offsetTable;
         this.trailer = trailer;
     }
 
     public void dump() {
-        log.info("Header:");
         log.info("Data:");
         data.dump();
-        log.info("Trailer:");
+        log.info("Offset table:");
+        offsetTable.dump();
     }
 
     public boolean decode() {
 
-        log.info("_sortVersion: " + trailer.getSortVersion());
-        log.info("_offsetIntSize: " + trailer.getOffsetIntSize());
-        log.info("_objectRefSize: " + trailer.getObjectRefSize());
-        log.info("_numObjects: " + trailer.getNumObjects());
-        log.info("_topObject: " + trailer.getTopObject());
-        log.info("_offsetTableOffset: " + trailer.getOffsetTableOffset());
+        log.info("sortVersion: " + trailer.getSortVersion());
+        log.info("offsetIntSize: " + trailer.getOffsetIntSize());
+        log.info("objectRefSize: " + trailer.getObjectRefSize());
+        log.info("numObjects: " + trailer.getNumObjects());
+        log.info("topObject: " + trailer.getTopObject());
+        log.info("offsetTableOffset: " + trailer.getOffsetTableOffset());
+        log.info("Data length: " + data.getLength());
+        log.info("Offset table length: " + offsetTable.getSize());
 
         while (data.hasMore()) {
             short next = data.readByte();
