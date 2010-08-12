@@ -17,9 +17,9 @@ public class BPStringUnicode implements BPItem {
 
     private final String data;
 
-    public BPStringUnicode(byte[] data) {
+    public BPStringUnicode(byte[] bytes) {
 
-        this.data = UTF8.decode(ByteBuffer.wrap(data)).toString();
+        this.data = UTF8.decode(ByteBuffer.wrap(bytes)).toString();
     }
 
     public String getData() {

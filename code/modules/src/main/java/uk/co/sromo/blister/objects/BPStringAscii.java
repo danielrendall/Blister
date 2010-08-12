@@ -17,8 +17,8 @@ public class BPStringAscii implements BPItem {
 
     private final String data;
 
-    public BPStringAscii(byte[] data) {
-        this.data = ASCII.decode(ByteBuffer.wrap(data)).toString();
+    public BPStringAscii(byte[] bytes) {
+        this.data = ASCII.decode(ByteBuffer.wrap(bytes)).toString();
     }
 
     public String getData() {
