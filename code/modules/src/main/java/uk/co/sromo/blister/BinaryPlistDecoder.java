@@ -147,11 +147,11 @@ public class BinaryPlistDecoder {
                     break;
                 case BOOL_FALSE:
                     log.debug("Bool_False");
-                    toReturn = BPBoolFalse.Instance;
+                    toReturn = BPBoolean.FALSE;
                     break;
                 case BOOL_TRUE:
                     log.debug("Bool_True");
-                    toReturn = BPBoolTrue.Instance;
+                    toReturn = BPBoolean.TRUE;
                     break;
                 case FILL:
                     log.debug("Fill");
