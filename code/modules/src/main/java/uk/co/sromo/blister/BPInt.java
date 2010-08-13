@@ -30,4 +30,14 @@ public class BPInt extends BPItem {
     public int getData() {
         return data;
     }
+
+    @Override
+    public Type type() {
+        return Type.Int;
+    }
+
+    @Override
+    public void accept(BPVisitor visitor) {
+        visitor.visit(this);
+    }
 }

@@ -11,4 +11,14 @@ public class BPNull extends BPItem {
 
     public final static BPNull Instance = new BPNull();
     private BPNull() {};
+
+    @Override
+    public Type type() {
+        return Type.Null;
+    }
+
+    @Override
+    public void accept(BPVisitor visitor) {
+        visitor.visit(this);
+    }
 }

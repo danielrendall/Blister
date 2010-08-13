@@ -17,4 +17,14 @@ public class BPBoolean extends BPItem {
     private BPBoolean(boolean value) {
         this.value = value;
     }
+
+    @Override
+    public Type type() {
+        return Type.Boolean;
+    }
+
+    @Override
+    public void accept(BPVisitor visitor) {
+        visitor.visit(this);
+    }
 }

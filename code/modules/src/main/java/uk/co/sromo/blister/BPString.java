@@ -47,4 +47,13 @@ public class BPString extends BPItem {
         return data;
     }
 
+    @Override
+    public Type type() {
+        return Type.String;
+    }
+
+    @Override
+    public void accept(BPVisitor visitor) {
+        visitor.visit(this);
+    }
 }

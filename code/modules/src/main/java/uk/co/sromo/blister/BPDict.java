@@ -37,4 +37,14 @@ public class BPDict extends BPExpandableItem {
             map.put(key, value);
         }
     }
+
+    @Override
+    public Type type() {
+        return Type.Dict;
+    }
+
+    @Override
+    public void accept(BPVisitor visitor) {
+        visitor.visit(this);
+    }
 }

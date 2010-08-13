@@ -16,5 +16,15 @@ public class BPReal extends BPItem {
         // TODO - fixme
         data = 0.0d;
     }
+
+    @Override
+    public Type type() {
+        return Type.Real;
+    }
+
+    @Override
+    public void accept(BPVisitor visitor) {
+        visitor.visit(this);
+    }
 }
 

@@ -29,4 +29,14 @@ public class BPArray extends BPExpandableItem {
             items[i] = item;
         }
     }
+
+    @Override
+    public Type type() {
+        return Type.Array;
+    }
+
+    @Override
+    public void accept(BPVisitor visitor) {
+        visitor.visit(this);
+    }
 }

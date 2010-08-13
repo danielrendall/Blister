@@ -32,4 +32,14 @@ public class BPSet extends BPExpandableItem {
             items.add(item);
         }
     }
+
+    @Override
+    public Type type() {
+        return Type.Set;
+    }
+
+    @Override
+    public void accept(BPVisitor visitor) {
+        visitor.visit(this);
+    }
 }

@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public abstract class BPItem {
 
-    public enum Type {Array, Boolean, Data, Date, Dict, Null, Real, Set, StringAscii, StringUnicode, Uid}
+    public enum Type {Array, Boolean, Data, Date, Dict, Int, Null, Real, Set, String, Uid}
 
     void expand(BinaryPlistDecoder decoder) {
         // nothing to do
@@ -20,4 +20,7 @@ public abstract class BPItem {
     boolean isExpanded() {
         return true;
     }
+
+    public abstract Type type();
+    public abstract void accept(BPVisitor visitor);
 }
