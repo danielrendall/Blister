@@ -12,6 +12,10 @@ public class BPBoolean extends BPItem {
     public final static BPBoolean TRUE = new BPBoolean(true);
     public final static BPBoolean FALSE = new BPBoolean(false);
 
+    public static BPBoolean get(boolean value) {
+        return value ? TRUE : FALSE;
+    }
+
     private final boolean value;
 
     private BPBoolean(boolean value) {

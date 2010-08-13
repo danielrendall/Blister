@@ -14,6 +14,10 @@ public class BPInt extends BPItem {
     private final int value;
     private static final Map<String, BPString> cache = new ConcurrentHashMap<String, BPString>(512, 0.75f, 16);
 
+    public static BPInt get(int value) {
+        return new BPInt(value);
+    }
+
     BPInt(byte[] bytes) {
         int size = bytes.length;
         int _data = 0;
@@ -28,7 +32,11 @@ public class BPInt extends BPItem {
         }
         this.value = _data;
     }
-    
+
+    private BPInt(int value) {
+        this.value = value;
+    }
+
     public int getValue() {
         return value;
     }

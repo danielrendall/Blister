@@ -36,6 +36,18 @@ public class BPArray extends BPExpandableItem implements List<BPItem> {
         return this;
     }
 
+    public BPArray with(String value) {
+        return with(BPString.get(value));
+    }
+
+    public BPArray with(int value) {
+        return with(BPInt.get(value));
+    }
+
+    public BPArray with(boolean value) {
+        return with(BPBoolean.get(value));
+    }
+
     public boolean add(BPItem bpItem) {
         return items.add(bpItem);
     }

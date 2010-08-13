@@ -48,6 +48,22 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
         return this;
     }
 
+    public BPDict with(String key, BPItem value) {
+        return with(BPString.get(key), value);
+    }
+
+    public BPDict with(String key, String value) {
+        return with(key, BPString.get(value));
+    }
+
+    public BPDict with(String key, int value) {
+        return with(key, BPInt.get(value));
+    }
+
+    public BPDict with(String key, boolean value) {
+        return with(key, BPBoolean.get(value));
+    }
+
     public void clear() {
         map.clear();
     }

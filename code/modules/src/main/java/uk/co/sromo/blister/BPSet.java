@@ -43,6 +43,18 @@ public class BPSet extends BPExpandableItem implements Set<BPItem> {
         return this;
     }
 
+    public BPSet with(String value) {
+        return with(BPString.get(value));
+    }
+
+    public BPSet with(int value) {
+        return with(BPInt.get(value));
+    }
+
+    public BPSet with(boolean value) {
+        return with(BPBoolean.get(value));
+    }
+
     public boolean add(BPItem bpItem) {
         return items.add(bpItem);
     }
