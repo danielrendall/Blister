@@ -7,12 +7,12 @@ package uk.co.sromo.blister;
  * Time: 00:25:50
  * To change this template use File | Settings | File Templates.
  */
-public abstract class BPExpandableItem extends BPItem {
+abstract class BPExpandableItem extends BPItem {
 
     private boolean expanded = false;
 
     @Override
-    public final void expand(BinaryPlistDecoder decoder) {
+    final void expand(BinaryPlistDecoder decoder) {
         if (!expanded) {
             doExpand(decoder);
             expanded = true;
@@ -22,7 +22,7 @@ public abstract class BPExpandableItem extends BPItem {
     protected abstract void doExpand(BinaryPlistDecoder decoder);
 
     @Override
-    public final boolean isExpanded() {
+    final boolean isExpanded() {
         return expanded;
     }
 }

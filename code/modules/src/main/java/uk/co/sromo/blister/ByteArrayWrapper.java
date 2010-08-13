@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
  * Time: 20:39:25
  * To change this template use File | Settings | File Templates.
  */
-public class ByteArrayWrapper {
+class ByteArrayWrapper {
 
     private final static Logger log = Logger.getLogger(ByteArrayWrapper.class);
 
@@ -18,43 +18,43 @@ public class ByteArrayWrapper {
     private final int length;
     private int pos;
 
-    public ByteArrayWrapper(byte[] bytes) {
+    ByteArrayWrapper(byte[] bytes) {
         this.bytes = bytes;
         this.length = bytes.length;
         this.pos = 0;
     }
 
-    public short readByte() {
+    short readByte() {
         return (short) (0x000000FF &  (int)bytes[pos++]);
     }
 
-    public int readShort() {
+    int readShort() {
         return ((0x000000FF & (int)bytes[pos++]) << 8) |
                 (0x000000FF & (int)bytes[pos++]);
     }
 
-    public long readInt() {
+    long readInt() {
         return (((long)(0x000000FF & (int)bytes[pos++])) << 24) |
                 (((long)(0x000000FF & (int)bytes[pos++])) << 16) |
                 (((long)(0x000000FF & (int)bytes[pos++])) << 8) |
                 (long)(0x000000FF & (int)bytes[pos++]);
     }
 
-    public long readLong() {
+    long readLong() {
         long msb = readInt();
         long lsb = readInt();
         return (msb << 32) | lsb;
     }
 
-    public void skip(int count) {
+    void skip(int count) {
         pos += count;
     }
 
-    public void reset() {
+    void reset() {
         pos = 0;
     }
 
-    public void dump() {
+    void dump() {
         StringBuilder sb = new StringBuilder();
         while (pos < length) {
             sb.append(Short.toString(readByte())).append(",");
@@ -67,22 +67,22 @@ public class ByteArrayWrapper {
         pos = 0;
     }
 
-    public byte[] get(int count) {
+    byte[] get(int count) {
         byte[] ret = new byte[count];
         System.arraycopy(bytes, pos, ret, 0, count);
         pos += count;
         return ret;
     }
 
-    public boolean hasMore() {
+    boolean hasMore() {
         return pos < length;
     }
 
-    public int getLength() {
+    int getLength() {
         return length;
     }
 
-    public void setPosition(int position) {
+    void setPosition(int position) {
         this.pos = position;
     }
 }

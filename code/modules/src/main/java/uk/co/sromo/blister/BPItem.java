@@ -11,11 +11,13 @@ import java.util.Map;
  */
 public abstract class BPItem {
 
-    public void expand(BinaryPlistDecoder decoder) {
+    public enum Type {Array, Boolean, Data, Date, Dict, Null, Real, Set, StringAscii, StringUnicode, Uid}
+
+    void expand(BinaryPlistDecoder decoder) {
         // nothing to do
     }
 
-    public boolean isExpanded() {
+    boolean isExpanded() {
         return true;
     }
 }

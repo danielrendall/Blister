@@ -12,7 +12,7 @@ import java.util.Locale;
  * Time: 22:35:55
  * To change this template use File | Settings | File Templates.
  */
-public class BinaryPlistHeader {
+class BinaryPlistHeader {
 
     private final static Logger log = Logger.getLogger(BinaryPlistHeader.class);
     private final static Formatter formatter = new Formatter(Locale.UK);
@@ -22,7 +22,7 @@ public class BinaryPlistHeader {
 
     private final int fileFormatVersion;
 
-    public static BinaryPlistHeader build(byte[] data) throws Exception {
+    static BinaryPlistHeader build(byte[] data) throws Exception {
         ByteArrayWrapper bytes = new ByteArrayWrapper(data);
         long first = bytes.readInt();
         long second = bytes.readInt();
@@ -39,7 +39,7 @@ public class BinaryPlistHeader {
     }
 
 
-    public int getFileFormatVersion() {
+    int getFileFormatVersion() {
         return fileFormatVersion;
     }
 }

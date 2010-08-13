@@ -7,7 +7,7 @@ package uk.co.sromo.blister;
  * Time: 22:41:27
  * To change this template use File | Settings | File Templates.
  */
-public class BinaryPlistTrailer {
+class BinaryPlistTrailer {
 
     /**
      * http://www.opensource.apple.com/source/CF/CF-550/ForFoundationOnly.h
@@ -22,7 +22,7 @@ public class BinaryPlistTrailer {
      * uint64_t	_offsetTableOffset;
      * } CFBinaryPlistTrailer;
      */
-    public static BinaryPlistTrailer build(byte[] data) {
+    static BinaryPlistTrailer build(byte[] data) {
         ByteArrayWrapper bytes = new ByteArrayWrapper(data);
         bytes.skip(5);
         short _sortVersion = bytes.readByte();
@@ -51,27 +51,27 @@ public class BinaryPlistTrailer {
         this.offsetTableOffset = offsetTableOffset;
     }
 
-    public long getNumObjects() {
+    long getNumObjects() {
         return numObjects;
     }
 
-    public short getObjectRefSize() {
+    short getObjectRefSize() {
         return objectRefSize;
     }
 
-    public short getOffsetIntSize() {
+    short getOffsetIntSize() {
         return offsetIntSize;
     }
 
-    public long getOffsetTableOffset() {
+    long getOffsetTableOffset() {
         return offsetTableOffset;
     }
 
-    public short getSortVersion() {
+    short getSortVersion() {
         return sortVersion;
     }
 
-    public long getTopObject() {
+    long getTopObject() {
         return topObject;
     }
 }

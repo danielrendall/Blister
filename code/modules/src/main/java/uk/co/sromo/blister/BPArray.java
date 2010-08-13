@@ -1,8 +1,4 @@
-package uk.co.sromo.blister.objects;
-
-import uk.co.sromo.blister.BPExpandableItem;
-import uk.co.sromo.blister.BPItem;
-import uk.co.sromo.blister.BinaryPlistDecoder;
+package uk.co.sromo.blister;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,7 +11,7 @@ public class BPArray extends BPExpandableItem {
     private final int[] arrayItemOffsets;
     private final BPItem[] items;
 
-    public BPArray(int[] arrayItemOffsets) {
+    BPArray(int[] arrayItemOffsets) {
         //To change body of created methods use File | Settings | File Templates.
         this.arrayItemOffsets = arrayItemOffsets;
         items = new BPItem[arrayItemOffsets.length];

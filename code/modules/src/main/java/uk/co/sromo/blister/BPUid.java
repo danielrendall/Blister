@@ -1,4 +1,4 @@
-package uk.co.sromo.blister.objects;
+package uk.co.sromo.blister;
 
 import uk.co.sromo.blister.BPItem;
 

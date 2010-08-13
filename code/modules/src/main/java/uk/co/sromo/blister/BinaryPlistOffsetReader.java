@@ -7,9 +7,9 @@ package uk.co.sromo.blister;
  * Time: 23:41:46
  * To change this template use File | Settings | File Templates.
  */
-public abstract class BinaryPlistOffsetReader {
+abstract class BinaryPlistOffsetReader {
 
-    public static BinaryPlistOffsetReader create(int byteSize) throws Exception {
+    static BinaryPlistOffsetReader create(int byteSize) throws Exception {
         switch (byteSize) {
             case 1:
                 return new BinaryPlistOffsetReader1();
@@ -22,26 +22,26 @@ public abstract class BinaryPlistOffsetReader {
         }
     }
 
-    public abstract int getOffset(ByteArrayWrapper bytes);
+    abstract int getOffset(ByteArrayWrapper bytes);
 
 
     private static class BinaryPlistOffsetReader1 extends BinaryPlistOffsetReader {
         @Override
-        public int getOffset(ByteArrayWrapper bytes) {
+        int getOffset(ByteArrayWrapper bytes) {
             return (int) bytes.readByte();
         }
     }
 
     private static class BinaryPlistOffsetReader2 extends BinaryPlistOffsetReader {
         @Override
-        public int getOffset(ByteArrayWrapper bytes) {
+        int getOffset(ByteArrayWrapper bytes) {
             return (int) bytes.readShort();
         }
     }
 
     private static class BinaryPlistOffsetReader4 extends BinaryPlistOffsetReader {
         @Override
-        public int getOffset(ByteArrayWrapper bytes) {
+        int getOffset(ByteArrayWrapper bytes) {
             return (int) bytes.readInt();
         }
     }

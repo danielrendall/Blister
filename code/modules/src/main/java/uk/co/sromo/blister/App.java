@@ -18,8 +18,6 @@ public class App {
         File f = new File(BINARY_PLIST);
         byte[] bytes = FileUtils.readFileToByteArray(f);
         log.debug("There were " + bytes.length + " bytes");
-        BinaryPlistDecoder bp = BinaryPlistDecoder.create(bytes);
-        bp.dump();
-        bp.decode();
+        BPItem bp = BinaryPlistDecoder.decode(bytes);
     }
 }

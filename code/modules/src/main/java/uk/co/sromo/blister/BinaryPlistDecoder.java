@@ -1,7 +1,6 @@
 package uk.co.sromo.blister;
 
 import org.apache.log4j.Logger;
-import uk.co.sromo.blister.objects.*;
 
 import java.util.*;
 
@@ -13,9 +12,6 @@ import java.util.*;
  * To change this template use File | Settings | File Templates.
  */
 public class BinaryPlistDecoder {
-
-    public final static long MAGIC_1 = 0x62706c69; // bpli
-    public final static long MAGIC_2 = 0x73743030; // st00
 
     private final static Formatter formatter = new Formatter(Locale.UK);
 
@@ -52,7 +48,7 @@ public class BinaryPlistDecoder {
 
     private final Queue<Integer> offsetsToExpand = new LinkedList<Integer>();
 
-    public static BinaryPlistDecoder create(byte[] plist) throws Exception {
+    public static BPItem decode(byte[] plist) throws Exception {
         if (plist.length < 40) {
             throw new Exception("PList not long enough");
         }
@@ -81,11 +77,13 @@ public class BinaryPlistDecoder {
         BinaryPlistOffsetReader offsetReader = BinaryPlistOffsetReader.create(trailer.getObjectRefSize());
         
 
-        return new BinaryPlistDecoder(header, trailer, dataBytes, offsetTable, offsetReader);
+        BinaryPlistDecoder decoder = new BinaryPlistDecoder(header, trailer, dataBytes, offsetTable, offsetReader);
+
+        return decoder.decode();
 
     }
 
-    public BinaryPlistDecoder(BinaryPlistHeader header, BinaryPlistTrailer trailer, byte[] data, BinaryPlistOffsetTable offsetTable, BinaryPlistOffsetReader offsetReader) throws Exception {
+    private BinaryPlistDecoder(BinaryPlistHeader header, BinaryPlistTrailer trailer, byte[] data, BinaryPlistOffsetTable offsetTable, BinaryPlistOffsetReader offsetReader) throws Exception {
 
 
         this.header = header;
@@ -102,7 +100,7 @@ public class BinaryPlistDecoder {
         offsetTable.dump();
     }
 
-    public boolean decode() {
+    private BPItem decode() {
 
         log.info("sortVersion: " + trailer.getSortVersion());
         log.info("offsetIntSize: " + trailer.getOffsetIntSize());
@@ -121,14 +119,15 @@ public class BinaryPlistDecoder {
             BPItem itemToExpand = items.get(offset);
             itemToExpand.expand(this);
         }
-        return true;
+
+        return item;
     }
 
-    public BPItem getItemAtIndex(int index) {
+    BPItem getItemAtIndex(int index) {
         return getItem(offsetTable.get(index));
     }
 
-    public BPItem getItem(int offset) {
+    BPItem getItem(int offset) {
         if (items.containsKey(offset)) {
             log.debug("Already have item at offset " + offset);
             return items.get(offset);

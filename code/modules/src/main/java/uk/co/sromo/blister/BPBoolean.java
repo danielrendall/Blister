@@ -1,6 +1,4 @@
-package uk.co.sromo.blister.objects;
-
-import uk.co.sromo.blister.BPItem;
+package uk.co.sromo.blister;
 
 /**
  * Created by IntelliJ IDEA.

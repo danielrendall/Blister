@@ -1,7 +1,6 @@
 package uk.co.sromo.blister;
 
 import org.apache.log4j.Logger;
-import uk.co.sromo.blister.objects.BPInt;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,14 +9,14 @@ import uk.co.sromo.blister.objects.BPInt;
  * Time: 23:10:01
  * To change this template use File | Settings | File Templates.
  */
-public class BinaryPlistOffsetTable {
+class BinaryPlistOffsetTable {
 
     private final static Logger log = Logger.getLogger(BinaryPlistOffsetTable.class);
 
     private final int[] offsets;
     private final int size;
 
-    public static BinaryPlistOffsetTable build(byte[] data, int offsetSize) throws Exception {
+    static BinaryPlistOffsetTable build(byte[] data, int offsetSize) throws Exception {
         if (data.length % offsetSize != 0) {
             throw new Exception("Length of data not commensurate with offset size");
         }
@@ -32,24 +31,24 @@ public class BinaryPlistOffsetTable {
         return new BinaryPlistOffsetTable(offsetArray);
     }
 
-    public BinaryPlistOffsetTable(int[] offsets) {
+    BinaryPlistOffsetTable(int[] offsets) {
         this.offsets = offsets;
         this.size = offsets.length;
     }
 
-    public int get(int offset) {
+    int get(int offset) {
         return offsets[offset];
     }
 
-    public int get(long offset) {
+    int get(long offset) {
         return offsets[(int)offset];
     }
 
-    public int getSize() {
+    int getSize() {
         return size;
     }
 
-    public void dump() {
+    void dump() {
         for (int i=0; i< size; i++) {
             log.debug(String.format("%d: %d", i, offsets[i]));
         }
