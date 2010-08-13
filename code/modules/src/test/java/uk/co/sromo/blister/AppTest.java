@@ -3,36 +3,25 @@ package uk.co.sromo.blister;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+
+import java.io.File;
 
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+public class AppTest {
+    public static String BINARY_PLIST = "/home/daniel/Development/Blister/resources/samples/BinaryInfo.plist";
+    private final static Logger log = Logger.getLogger(AppTest.class);
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
+    public static void main(String[] args) throws Exception {
+        File f = new File(BINARY_PLIST);
+        byte[] bytes = FileUtils.readFileToByteArray(f);
+        log.debug("There were " + bytes.length + " bytes");
+        BPItem bp = BinaryPlistDecoder.decode(bytes);
+        BPVisitor dump = new DumpVisitor();
+        bp.accept(dump);
     }
 }
