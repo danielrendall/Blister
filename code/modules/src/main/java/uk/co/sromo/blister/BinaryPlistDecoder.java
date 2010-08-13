@@ -187,7 +187,7 @@ public class BinaryPlistDecoder {
                             int numStringAsciiChars = (littleNibble < 0x0f) ? littleNibble : readAnInt();
                             log.debug(String.format("String_Ascii %d chars", numStringAsciiChars));
                             byte[] stringAsciiData = data.get(numStringAsciiChars);
-                            final BPStringAscii bpStringAscii = new BPStringAscii(stringAsciiData);
+                            final BPString bpStringAscii = BPString.ascii(stringAsciiData);
                             log.debug("String: " + bpStringAscii.getData());
                             toReturn = bpStringAscii;
                             break;
@@ -195,7 +195,7 @@ public class BinaryPlistDecoder {
                             int numStringUnicodeChars = (littleNibble < 0x0f) ? littleNibble : readAnInt();
                             log.debug(String.format("String_Unicode %d chars", numStringUnicodeChars));
                             byte[] stringUnicodeData = data.get(numStringUnicodeChars << 1);
-                            final BPStringUnicode bpStringUnicode = new BPStringUnicode(stringUnicodeData);
+                            final BPString bpStringUnicode = BPString.unicode(stringUnicodeData);
                             log.debug("String: " + bpStringUnicode.getData());
                             toReturn = bpStringUnicode;
                             break;
