@@ -13,12 +13,22 @@ public class BPData extends BPItem {
     private final byte[] data;
 
     public BPData(byte[] data) {
-        //To change body of created methods use File | Settings | File Templates.
         this.data = data;
     }
 
+    public byte[] getData() {
+        return data;
+    }
+
     @Override
-    public Type type() {
+    public String toString() {
+        return "BPData{" +
+                "data=" + data +
+                '}';
+    }
+
+    @Override
+    public Type getType() {
         return Type.Data;
     }
 

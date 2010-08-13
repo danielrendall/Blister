@@ -16,9 +16,9 @@ class BinaryPlistOffsetTable {
     private final int[] offsets;
     private final int size;
 
-    static BinaryPlistOffsetTable build(byte[] data, int offsetSize) throws Exception {
+    static BinaryPlistOffsetTable build(byte[] data, int offsetSize) throws BinaryPlistException {
         if (data.length % offsetSize != 0) {
-            throw new Exception("Length of data not commensurate with offset size");
+            throw new BinaryPlistException("Length of data not commensurate with offset size");
         }
         final int numberOfOffsets = data.length / offsetSize;
         int[] offsetArray = new int[numberOfOffsets];
@@ -26,7 +26,7 @@ class BinaryPlistOffsetTable {
 
         for (int i=0; i < numberOfOffsets; i++) {
             System.arraycopy(data, i * offsetSize, buffer, 0, offsetSize);
-            offsetArray[i] = new BPInt(buffer).getData() - 8; // offsets relative to start of data
+            offsetArray[i] = new BPInt(buffer).getValue() - 8; // offsets relative to start of data
         }
         return new BinaryPlistOffsetTable(offsetArray);
     }

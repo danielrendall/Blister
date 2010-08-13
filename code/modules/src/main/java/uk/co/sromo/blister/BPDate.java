@@ -14,12 +14,19 @@ public class BPDate extends BPItem {
     private final byte[] data;
 
     public BPDate(byte[] data) {
-        //To change body of created methods use File | Settings | File Templates.
         this.data = data;
+        log.warn("BPDate not yet implemented");
     }
 
     @Override
-    public Type type() {
+    public String toString() {
+        return "BPDate{" +
+                "data=" + data +
+                '}';
+    }
+
+    @Override
+    public Type getType() {
         return Type.Date;
     }
 

@@ -1,5 +1,7 @@
 package uk.co.sromo.blister;
 
+import org.apache.log4j.Logger;
+
 import java.util.Map;
 
 /**
@@ -10,10 +12,11 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class BPItem {
+    protected final static Logger log = Logger.getLogger(BPItem.class);
 
     public enum Type {Array, Boolean, Data, Date, Dict, Int, Null, Real, Set, String, Uid}
 
-    void expand(BinaryPlistDecoder decoder) {
+    void expand(BinaryPlistDecoder decoder) throws BinaryPlistException {
         // nothing to do
     }
 
@@ -21,6 +24,6 @@ public abstract class BPItem {
         return true;
     }
 
-    public abstract Type type();
+    public abstract Type getType();
     public abstract void accept(BPVisitor visitor);
 }

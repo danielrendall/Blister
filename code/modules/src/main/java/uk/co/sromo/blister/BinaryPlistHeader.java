@@ -22,14 +22,14 @@ class BinaryPlistHeader {
 
     private final int fileFormatVersion;
 
-    static BinaryPlistHeader build(byte[] data) throws Exception {
+    static BinaryPlistHeader build(byte[] data) throws BinaryPlistException {
         ByteArrayWrapper bytes = new ByteArrayWrapper(data);
         long first = bytes.readInt();
         long second = bytes.readInt();
         long secondMasked = second & 0xffff0000;
         if ((first != MAGIC_1) || (secondMasked != MAGIC_2)) {
             log.warn("Magic numbers wrong - were " + formatter.format("%1$2x %2$2x", first, second));
-            throw new Exception("Bad magic number");
+            throw new BinaryPlistException("Bad magic number");
         }
         return new BinaryPlistHeader((int)(second & 0x0000ffff));
     }

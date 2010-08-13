@@ -18,8 +18,34 @@ public class BPBoolean extends BPItem {
         this.value = value;
     }
 
+    public boolean value() {
+        return value;
+    }
+
     @Override
-    public Type type() {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BPBoolean bpBoolean = (BPBoolean) o;
+
+        if (value != bpBoolean.value) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (value ? 1 : 0);
+    }
+
+    @Override
+    public String toString() {
+        return Boolean.toString(value);
+    }
+
+    @Override
+    public Type getType() {
         return Type.Boolean;
     }
 

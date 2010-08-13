@@ -1,7 +1,5 @@
 package uk.co.sromo.blister;
 
-import uk.co.sromo.blister.BPItem;
-
 /**
  * Created by IntelliJ IDEA.
  * User: daniel
@@ -10,15 +8,42 @@ import uk.co.sromo.blister.BPItem;
  * To change this template use File | Settings | File Templates.
  */
 public class BPReal extends BPItem {
-    private final double data;
+    private final double value;
 
     public BPReal(byte[] bytes) {
-        // TODO - fixme
-        data = 0.0d;
+        log.warn("BPReal not implemented");
+        value = 0.0d;
+    }
+
+    public double getValue() {
+        return value;
     }
 
     @Override
-    public Type type() {
+    public String toString() {
+        return Double.toString(value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BPReal bpReal = (BPReal) o;
+
+        if (Double.compare(bpReal.value, value) != 0) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        long temp = value != +0.0d ? Double.doubleToLongBits(value) : 0L;
+        return (int) (temp ^ (temp >>> 32));
+    }
+
+    @Override
+    public Type getType() {
         return Type.Real;
     }
 

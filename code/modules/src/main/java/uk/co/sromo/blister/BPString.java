@@ -3,7 +3,6 @@ package uk.co.sromo.blister;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -19,7 +18,7 @@ public class BPString extends BPItem {
     // take advantage of interning of strings to get unique BPString objects
     private static final Map<String, BPString> cache = new ConcurrentHashMap<String, BPString>(512, 0.75f, 16);
 
-    private final String data;
+    private final String value;
 
     static BPString ascii(byte[] bytes) {
         return get(ASCII.decode(ByteBuffer.wrap(bytes)).toString());
@@ -39,16 +38,38 @@ public class BPString extends BPItem {
         }
     }
     
-    private BPString(String data) {
-        this.data = data;
+    private BPString(String value) {
+        this.value = value;
     }
 
-    public String getData() {
-        return data;
+    public String getValue() {
+        return value;
     }
 
     @Override
-    public Type type() {
+    public String toString() {
+        return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BPString bpString = (BPString) o;
+
+        if (value != null ? !value.equals(bpString.value) : bpString.value != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return value != null ? value.hashCode() : 0;
+    }
+
+    @Override
+    public Type getType() {
         return Type.String;
     }
 

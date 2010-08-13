@@ -9,7 +9,7 @@ package uk.co.sromo.blister;
  */
 abstract class BinaryPlistOffsetReader {
 
-    static BinaryPlistOffsetReader create(int byteSize) throws Exception {
+    static BinaryPlistOffsetReader create(int byteSize) throws BinaryPlistException {
         switch (byteSize) {
             case 1:
                 return new BinaryPlistOffsetReader1();
@@ -18,7 +18,7 @@ abstract class BinaryPlistOffsetReader {
             case 4:
                 return new BinaryPlistOffsetReader4();
             default:
-                throw new Exception("Can't cope with " + byteSize + " size ints");
+                throw new BinaryPlistException("Can't cope with " + byteSize + " size ints");
         }
     }
 

@@ -4,7 +4,9 @@ import uk.co.sromo.blister.BPExpandableItem;
 import uk.co.sromo.blister.BPItem;
 import uk.co.sromo.blister.BinaryPlistDecoder;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -14,14 +16,17 @@ import java.util.Set;
  * Time: 21:45:25
  * To change this template use File | Settings | File Templates.
  */
-public class BPSet extends BPExpandableItem {
+public class BPSet extends BPExpandableItem implements Set<BPItem> {
     private final int[] setItemOffsets;
-    private final Set<BPItem> items;
+    private final Set<BPItem> items = new HashSet<BPItem>();
 
-    public BPSet(int[] setItemOffsets) {
+    BPSet(int[] setItemOffsets) {
         //To change body of created methods use File | Settings | File Templates.
         this.setItemOffsets = setItemOffsets;
-        items = new HashSet<BPItem>();
+    }
+
+    public BPSet() {
+        setItemOffsets = EMPTY;
     }
 
     @Override
@@ -33,8 +38,82 @@ public class BPSet extends BPExpandableItem {
         }
     }
 
+    public BPSet with(BPItem item) {
+        add(item);
+        return this;
+    }
+
+    public boolean add(BPItem bpItem) {
+        return items.add(bpItem);
+    }
+
+    public boolean addAll(Collection<? extends BPItem> c) {
+        return items.addAll(c);
+    }
+
+    public void clear() {
+        items.clear();
+    }
+
+    public boolean contains(Object o) {
+        return items.contains(o);
+    }
+
+    public boolean containsAll(Collection<?> c) {
+        return items.containsAll(c);
+    }
+
     @Override
-    public Type type() {
+    public boolean equals(Object o) {
+        return items.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return items.hashCode();
+    }
+
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
+
+    public Iterator<BPItem> iterator() {
+        return items.iterator();
+    }
+
+    public boolean remove(Object o) {
+        return items.remove(o);
+    }
+
+    public boolean removeAll(Collection<?> c) {
+        return items.removeAll(c);
+    }
+
+    public boolean retainAll(Collection<?> c) {
+        return items.retainAll(c);
+    }
+
+    public int size() {
+        return items.size();
+    }
+
+    public Object[] toArray() {
+        return items.toArray();
+    }
+
+    public <T> T[] toArray(T[] a) {
+        return items.toArray(a);
+    }
+
+    @Override
+    public String toString() {
+        return "BPSet{" +
+                "items=" + items +
+                '}';
+    }
+
+    @Override
+    public Type getType() {
         return Type.Set;
     }
 

@@ -1,6 +1,7 @@
 package uk.co.sromo.blister;
 
-import uk.co.sromo.blister.BPItem;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,9 +11,10 @@ import uk.co.sromo.blister.BPItem;
  * To change this template use File | Settings | File Templates.
  */
 public class BPInt extends BPItem {
-    private final int data;
+    private final int value;
+    private static final Map<String, BPString> cache = new ConcurrentHashMap<String, BPString>(512, 0.75f, 16);
 
-    public BPInt(byte[] bytes) {
+    BPInt(byte[] bytes) {
         int size = bytes.length;
         int _data = 0;
         if (size == 1) {
@@ -24,15 +26,37 @@ public class BPInt extends BPItem {
         } else {
             throw new RuntimeException("Wasn't expecting an int to be " + size + " bytes");
         }
-        this.data = _data;
+        this.value = _data;
     }
-
-    public int getData() {
-        return data;
+    
+    public int getValue() {
+        return value;
     }
 
     @Override
-    public Type type() {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BPInt bpInt = (BPInt) o;
+
+        if (value != bpInt.value) return false;
+
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return Integer.toString(value);
+    }
+
+    @Override
+    public int hashCode() {
+        return value;
+    }
+
+    @Override
+    public Type getType() {
         return Type.Int;
     }
 

@@ -48,9 +48,9 @@ public class BinaryPlistDecoder {
 
     private final Queue<Integer> offsetsToExpand = new LinkedList<Integer>();
 
-    public static BPItem decode(byte[] plist) throws Exception {
+    public static BPItem decode(byte[] plist) throws BinaryPlistException {
         if (plist.length < 40) {
-            throw new Exception("PList not long enough");
+            throw new BinaryPlistException("PList not long enough");
         }
 
         byte[] headerBytes = new byte[8];
@@ -83,9 +83,7 @@ public class BinaryPlistDecoder {
 
     }
 
-    private BinaryPlistDecoder(BinaryPlistHeader header, BinaryPlistTrailer trailer, byte[] data, BinaryPlistOffsetTable offsetTable, BinaryPlistOffsetReader offsetReader) throws Exception {
-
-
+    private BinaryPlistDecoder(BinaryPlistHeader header, BinaryPlistTrailer trailer, byte[] data, BinaryPlistOffsetTable offsetTable, BinaryPlistOffsetReader offsetReader) {
         this.header = header;
         this.data = new ByteArrayWrapper(data);
         this.offsetTable = offsetTable;
@@ -100,7 +98,7 @@ public class BinaryPlistDecoder {
         offsetTable.dump();
     }
 
-    private BPItem decode() {
+    private BPItem decode() throws BinaryPlistException {
 
         log.info("sortVersion: " + trailer.getSortVersion());
         log.info("offsetIntSize: " + trailer.getOffsetIntSize());
@@ -188,7 +186,7 @@ public class BinaryPlistDecoder {
                             log.debug(String.format("String_Ascii %d chars", numStringAsciiChars));
                             byte[] stringAsciiData = data.get(numStringAsciiChars);
                             final BPString bpStringAscii = BPString.ascii(stringAsciiData);
-                            log.debug("String: " + bpStringAscii.getData());
+                            log.debug("String: " + bpStringAscii.getValue());
                             toReturn = bpStringAscii;
                             break;
                         case STRING_UNICODE:
@@ -196,7 +194,7 @@ public class BinaryPlistDecoder {
                             log.debug(String.format("String_Unicode %d chars", numStringUnicodeChars));
                             byte[] stringUnicodeData = data.get(numStringUnicodeChars << 1);
                             final BPString bpStringUnicode = BPString.unicode(stringUnicodeData);
-                            log.debug("String: " + bpStringUnicode.getData());
+                            log.debug("String: " + bpStringUnicode.getValue());
                             toReturn = bpStringUnicode;
                             break;
                         case UID:
@@ -230,6 +228,8 @@ public class BinaryPlistDecoder {
                             int[] valueOffsets = new int[numDictItems];
                             for (int i=0; i< numDictItems; i++) {
                                 keyOffsets[i] = offsetReader.getOffset(data);
+                            }
+                            for (int i=0; i< numDictItems; i++) {
                                 valueOffsets[i] = offsetReader.getOffset(data);
                             }
                             toReturn = new BPDict(keyOffsets, valueOffsets);
@@ -262,7 +262,7 @@ public class BinaryPlistDecoder {
         int numIntBytes = twoToThe(littleNibble);
         byte[] intData = data.get(numIntBytes);
         BPInt ret = new BPInt(intData);
-        return ret.getData();
+        return ret.getValue();
     }
 
     private int twoToThe(short exponent) {

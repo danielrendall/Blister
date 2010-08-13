@@ -9,17 +9,18 @@ package uk.co.sromo.blister;
  */
 abstract class BPExpandableItem extends BPItem {
 
+    protected final static int[] EMPTY = new int[] {};
     private boolean expanded = false;
 
     @Override
-    final void expand(BinaryPlistDecoder decoder) {
+    final void expand(BinaryPlistDecoder decoder) throws BinaryPlistException {
         if (!expanded) {
             doExpand(decoder);
             expanded = true;
         }
     }
 
-    protected abstract void doExpand(BinaryPlistDecoder decoder);
+    protected abstract void doExpand(BinaryPlistDecoder decoder) throws BinaryPlistException;
 
     @Override
     final boolean isExpanded() {

@@ -13,12 +13,19 @@ public class BPUid extends BPItem {
     private final byte[] data;
 
     public BPUid(byte[] data) {
-        //To change body of created methods use File | Settings | File Templates.
+        log.warn("BPUid not implemented");
         this.data = data;
     }
 
     @Override
-    public Type type() {
+    public String toString() {
+        return "BPUid{" +
+                "data=" + data +
+                '}';
+    }
+
+    @Override
+    public Type getType() {
         return Type.Uid;
     }
 
