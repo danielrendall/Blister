@@ -20,7 +20,7 @@ public class AppTest {
         File f = new File(BINARY_PLIST);
         byte[] bytes = FileUtils.readFileToByteArray(f);
         log.debug("There were " + bytes.length + " bytes");
-        BPItem bp = BinaryPlistDecoder.decode(bytes);
+        BPItem bp = BinaryPlist.decode(bytes);
         BPVisitor dump = new DumpVisitor();
         bp.accept(dump);
     }

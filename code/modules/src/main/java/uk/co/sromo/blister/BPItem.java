@@ -20,6 +20,10 @@ public abstract class BPItem {
         // nothing to do
     }
 
+    boolean canBeRoot() {
+        return false;
+    }
+
     boolean isExpanded() {
         return true;
     }

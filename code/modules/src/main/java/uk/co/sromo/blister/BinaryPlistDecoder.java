@@ -24,66 +24,11 @@ public class BinaryPlistDecoder {
 
     private final static Logger log = Logger.getLogger(BinaryPlistDecoder.class);
 
-    private final static short NULL = (short) 0x00;
-    private final static short BOOL_FALSE = (short) 0x08;
-    private final static short BOOL_TRUE = (short) 0x09;
-    private final static short FILL = (short) 0x0f;
-    private final static short INT = (short) 0x10; // mask
-    private final static short REAL = (short) 0x20; // mask
-    private final static short DATE = (short) 0x33;
-    private final static short DATA = (short) 0x40; // mask
-    private final static short STRING_ASCII = (short) 0x50; // mask
-    private final static short STRING_UNICODE = (short) 0x60; // mask
-    private final static short UNUSED_1 = (short) 0x70; // mask
-    private final static short UID = (short) 0x80; // mask
-    private final static short UNUSED_2 = (short) 0x90; // mask
-    private final static short ARRAY = (short) 0xa0; // mask
-    private final static short UNUSED_3 = (short) 0xb0; // mask
-    private final static short SET = (short) 0xc0; // mask
-    private final static short DICT = (short) 0xd0; // mask
-    private final static short UNUSED_4 = (short) 0xe0; // mask
-    private final static short UNUSED_5 = (short) 0xf0; // mask
-
     private final Map<Integer, BPItem> items = new HashMap<Integer, BPItem>(); // offset, item
 
     private final Queue<Integer> offsetsToExpand = new LinkedList<Integer>();
 
-    public static BPItem decode(byte[] plist) throws BinaryPlistException {
-        if (plist.length < 40) {
-            throw new BinaryPlistException("PList not long enough");
-        }
-
-        byte[] headerBytes = new byte[8];
-        byte[] trailerBytes = new byte[32];
-
-        System.arraycopy(plist, 0, headerBytes, 0, 8);
-        System.arraycopy(plist, plist.length - 32, trailerBytes, 0, 32);
-
-        BinaryPlistHeader header = BinaryPlistHeader.build(headerBytes);
-        BinaryPlistTrailer trailer = BinaryPlistTrailer.build(trailerBytes);
-
-        int offset = (int) trailer.getOffsetTableOffset();
-
-        int dataLength = offset - 8;
-        int offsetTableLength = plist.length - 32 - offset;
-
-        byte[] dataBytes = new byte[dataLength];
-        System.arraycopy(plist, 8, dataBytes, 0, dataLength);
-
-        byte[] offsetTableBytes = new byte[offsetTableLength];
-        System.arraycopy(plist, offset, offsetTableBytes, 0, offsetTableLength);
-        BinaryPlistOffsetTable offsetTable = BinaryPlistOffsetTable.build(offsetTableBytes, trailer.getOffsetIntSize());
-
-        BinaryPlistOffsetReader offsetReader = BinaryPlistOffsetReader.create(trailer.getObjectRefSize());
-        
-
-        BinaryPlistDecoder decoder = new BinaryPlistDecoder(header, trailer, dataBytes, offsetTable, offsetReader);
-
-        return decoder.decode();
-
-    }
-
-    private BinaryPlistDecoder(BinaryPlistHeader header, BinaryPlistTrailer trailer, byte[] data, BinaryPlistOffsetTable offsetTable, BinaryPlistOffsetReader offsetReader) {
+    BinaryPlistDecoder(BinaryPlistHeader header, BinaryPlistTrailer trailer, byte[] data, BinaryPlistOffsetTable offsetTable, BinaryPlistOffsetReader offsetReader) {
         this.header = header;
         this.data = new ByteArrayWrapper(data);
         this.offsetTable = offsetTable;
@@ -98,7 +43,7 @@ public class BinaryPlistDecoder {
         offsetTable.dump();
     }
 
-    private BPItem decode() throws BinaryPlistException {
+    BPItem decode() throws BinaryPlistException {
 
         log.info("sortVersion: " + trailer.getSortVersion());
         log.info("offsetIntSize: " + trailer.getOffsetIntSize());
@@ -138,23 +83,23 @@ public class BinaryPlistDecoder {
             data.setPosition(offset);
             short next = data.readByte();
             switch (next) {
-                case NULL:
+                case BinaryPlist.NULL:
                     log.debug("Null");
                     toReturn = BPNull.Instance;
                     break;
-                case BOOL_FALSE:
+                case BinaryPlist.BOOL_FALSE:
                     log.debug("Bool_False");
                     toReturn = BPBoolean.FALSE;
                     break;
-                case BOOL_TRUE:
+                case BinaryPlist.BOOL_TRUE:
                     log.debug("Bool_True");
                     toReturn = BPBoolean.TRUE;
                     break;
-                case FILL:
+                case BinaryPlist.FILL:
                     log.debug("Fill");
                     toReturn = BPNull.Instance;
                     break;
-                case DATE:
+                case BinaryPlist.DATE:
                     log.debug("Date");
                     byte[] dateData = data.get(8);
                     toReturn = new BPDate(dateData);
@@ -163,25 +108,25 @@ public class BinaryPlistDecoder {
                     final short littleNibble = (short) (next & 0x000f);
                     final short bigNibble = (short) (next & 0x00f0);
                     switch (bigNibble) {
-                        case INT:
+                        case BinaryPlist.INT:
                             int numIntBytes = twoToThe(littleNibble);
                             log.debug(String.format("Int %d bytes", numIntBytes));
                             byte[] intData = data.get(numIntBytes);
                             toReturn = new BPInt(intData);
                             break;
-                        case REAL:
+                        case BinaryPlist.REAL:
                             int numRealBytes = twoToThe(littleNibble);
                             log.debug(String.format("Real %d bytes", numRealBytes));
                             byte[] realData = data.get(numRealBytes);
                             toReturn = new BPReal(realData);
                             break;
-                        case DATA:
+                        case BinaryPlist.DATA:
                             int numDataBytes = (littleNibble < 0x0f) ? littleNibble : readAnInt();
                             log.debug(String.format("Data %d bytes", numDataBytes));
                             byte[] dataData = data.get(numDataBytes);
                             toReturn = new BPData(dataData);
                             break;
-                        case STRING_ASCII:
+                        case BinaryPlist.STRING_ASCII:
                             int numStringAsciiChars = (littleNibble < 0x0f) ? littleNibble : readAnInt();
                             log.debug(String.format("String_Ascii %d chars", numStringAsciiChars));
                             byte[] stringAsciiData = data.get(numStringAsciiChars);
@@ -189,7 +134,7 @@ public class BinaryPlistDecoder {
                             log.debug("String: " + bpStringAscii.getValue());
                             toReturn = bpStringAscii;
                             break;
-                        case STRING_UNICODE:
+                        case BinaryPlist.STRING_UNICODE:
                             int numStringUnicodeChars = (littleNibble < 0x0f) ? littleNibble : readAnInt();
                             log.debug(String.format("String_Unicode %d chars", numStringUnicodeChars));
                             byte[] stringUnicodeData = data.get(numStringUnicodeChars << 1);
@@ -197,13 +142,13 @@ public class BinaryPlistDecoder {
                             log.debug("String: " + bpStringUnicode.getValue());
                             toReturn = bpStringUnicode;
                             break;
-                        case UID:
+                        case BinaryPlist.UID:
                             int numUidBytes = littleNibble + 1;
                             log.debug(String.format("UID %d bytes", numUidBytes));
                             byte[] uidData = data.get(numUidBytes);
                             toReturn = new BPUid(uidData);
                             break;
-                        case ARRAY:
+                        case BinaryPlist.ARRAY:
                             int numArrayItems = (littleNibble < 0x0f) ? littleNibble : readAnInt();
                             log.debug(String.format("Array %d items", numArrayItems));
                             int[] arrayItemOffsets = new int[numArrayItems];
@@ -212,7 +157,7 @@ public class BinaryPlistDecoder {
                             }
                             toReturn = new BPArray(arrayItemOffsets);
                             break;
-                        case SET:
+                        case BinaryPlist.SET:
                             int numSetItems = (littleNibble < 0x0f) ? littleNibble : readAnInt();
                             log.debug(String.format("Set %d items", numSetItems));
                             int[] setItemOffsets = new int[numSetItems];
@@ -221,7 +166,7 @@ public class BinaryPlistDecoder {
                             }
                             toReturn = new BPSet(setItemOffsets);
                             break;
-                        case DICT:
+                        case BinaryPlist.DICT:
                             int numDictItems = (littleNibble < 0x0f) ? littleNibble : readAnInt();
                             log.debug(String.format("Dict %d items", numDictItems));
                             int[] keyOffsets = new int[numDictItems];
@@ -256,7 +201,7 @@ public class BinaryPlistDecoder {
         short next = data.readByte();
         final short littleNibble = (short) (next & 0x000f);
         final short bigNibble = (short) (next & 0x00f0);
-        if (bigNibble != INT) {
+        if (bigNibble != BinaryPlist.INT) {
             throw new RuntimeException("Asked to read an int, but next thing in stream wasn't one");
         }
         int numIntBytes = twoToThe(littleNibble);

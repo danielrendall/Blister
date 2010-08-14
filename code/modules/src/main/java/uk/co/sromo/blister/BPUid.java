@@ -1,7 +1,5 @@
 package uk.co.sromo.blister;
 
-import uk.co.sromo.blister.BPItem;
-
 /**
  * Created by IntelliJ IDEA.
  * User: daniel
@@ -10,17 +8,21 @@ import uk.co.sromo.blister.BPItem;
  * To change this template use File | Settings | File Templates.
  */
 public class BPUid extends BPItem {
-    private final byte[] data;
+    private final byte[] value;
 
-    public BPUid(byte[] data) {
+    public BPUid(byte[] value) {
         log.warn("BPUid not implemented");
-        this.data = data;
+        this.value = value;
+    }
+
+    public byte[] getValue() {
+        return value;
     }
 
     @Override
     public String toString() {
         return "BPUid{" +
-                "data=" + data +
+                "value=" + value +
                 '}';
     }
 

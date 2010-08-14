@@ -13,6 +13,7 @@ class ByteArrayWrapper {
 
     private final static Logger log = Logger.getLogger(ByteArrayWrapper.class);
 
+    // can we use a ByteBuffer for this?
 
     private final byte[] bytes;
     private final int length;

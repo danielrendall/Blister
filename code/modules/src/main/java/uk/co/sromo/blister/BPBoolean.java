@@ -22,7 +22,7 @@ public class BPBoolean extends BPItem {
         this.value = value;
     }
 
-    public boolean value() {
+    public boolean getValue() {
         return value;
     }
 
