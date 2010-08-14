@@ -43,7 +43,7 @@ public class BPString extends BPItem {
     // externally created strings are assumed to be unicode
     // TODO - we could be cleverer and check to see if a string can be encoded in ASCII
     public static BPString get(String string) {
-        return get(string, EncodingType.UTF16);
+        return get(string, EncodingType.ASCII); // TODO - should be UTF16 but need to investigate byte order issues
     }
     
     private BPString(String value, EncodingType encodingType) {

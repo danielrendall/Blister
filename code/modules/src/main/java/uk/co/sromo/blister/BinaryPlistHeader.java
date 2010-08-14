@@ -19,7 +19,7 @@ class BinaryPlistHeader {
     private final static Formatter formatter = new Formatter(Locale.UK);
 
     public final static long MAGIC_1 = 0x62706c69; // bpli
-    public final static long MAGIC_2 = 0x73740000; // st..
+    public final static long MAGIC_2 = 0x73743030; // st..
 
     private final int fileFormatVersion;
 
@@ -27,8 +27,7 @@ class BinaryPlistHeader {
         ByteBuffer bytes = ByteBuffer.wrap(data);
         long first = bytes.getInt();
         long second = bytes.getInt();
-        long secondMasked = second & 0xffff0000;
-        if ((first != MAGIC_1) || (secondMasked != MAGIC_2)) {
+        if ((first != MAGIC_1) || (second != MAGIC_2)) {
             log.warn("Magic numbers wrong - were " + formatter.format("%1$2x %2$2x", first, second));
             throw new BinaryPlistException("Bad magic number");
         }
