@@ -1,5 +1,7 @@
 package uk.co.sromo.blister;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -17,7 +19,8 @@ public class BPString extends BPItem {
     private static final Charset UTF16 = Charset.forName("UTF16");
     // take advantage of interning of strings to get unique BPString objects
     private static final Map<String, BPString> cache = new ConcurrentHashMap<String, BPString>(512, 0.75f, 16);
-    private enum EncodingType {ASCII, UTF16};
+
+    enum EncodingType {ASCII, UTF16};
 
     private final String value;
     private final EncodingType encodingType;
@@ -43,7 +46,8 @@ public class BPString extends BPItem {
     // externally created strings are assumed to be unicode
     // TODO - we could be cleverer and check to see if a string can be encoded in ASCII
     public static BPString get(String string) {
-        return get(string, EncodingType.ASCII); // TODO - should be UTF16 but need to investigate byte order issues
+        String roundTripped = ASCII.decode(ASCII.encode(string)).toString();
+        return get(string, roundTripped.equals(string) ? EncodingType.ASCII : EncodingType.UTF16);
     }
     
     private BPString(String value, EncodingType encodingType) {
@@ -74,6 +78,10 @@ public class BPString extends BPItem {
         } else {
             return BinaryPlist.STRING_UNICODE;
         }
+    }
+
+    public EncodingType getEncodingType() {
+         return encodingType;
     }
 
     public String getValue() {
