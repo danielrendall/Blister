@@ -76,9 +76,9 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
         return with(key, BPBoolean.get(value));
     }
 
-    public String getString(String key, String def) throws BinaryPlistException {
+    public String get(String key, String fallback) throws BinaryPlistException {
         BPString bpKey = new BPString(key);
-        if (!containsKey(bpKey)) return def;
+        if (!containsKey(bpKey)) return fallback;
         BPItem value = get(bpKey);
         if (value.getType() != BPItem.Type.String) {
             throw new BinaryPlistException("Not a string");
@@ -86,9 +86,9 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
         return ((BPString) value).getValue();
     }
 
-    public int getString(String key, int def) throws BinaryPlistException {
+    public int get(String key, int fallback) throws BinaryPlistException {
         BPString bpKey = new BPString(key);
-        if (!containsKey(bpKey)) return def;
+        if (!containsKey(bpKey)) return fallback;
         BPItem value = get(bpKey);
         if (value.getType() != BPItem.Type.Int) {
             throw new BinaryPlistException("Not an int");
@@ -96,9 +96,9 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
         return ((BPInt) value).getValue();
     }
 
-    public boolean getBoolean(String key, boolean def) throws BinaryPlistException {
+    public boolean get(String key, boolean fallback) throws BinaryPlistException {
         BPString bpKey = new BPString(key);
-        if (!containsKey(bpKey)) return def;
+        if (!containsKey(bpKey)) return fallback;
         BPItem value = get(bpKey);
         if (value.getType() != BPItem.Type.Boolean) {
             throw new BinaryPlistException("Not a boolean");
@@ -106,12 +106,22 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
         return ((BPBoolean) value).getValue();
     }
 
+    public double get(String key, double fallback) throws BinaryPlistException {
+        BPString bpKey = new BPString(key);
+        if (!containsKey(bpKey)) return fallback;
+        BPItem value = get(bpKey);
+        if (value.getType() != BPItem.Type.Real) {
+            throw new BinaryPlistException("Not a real");
+        }
+        return ((BPReal) value).getValue();
+    }
+
     public void clear() {
         map.clear();
     }
 
     public boolean containsKey(Object key) {
-        return map.containsKey(key);
+        return map.containsKey(key instanceof String ? new BPString((String)key) : key);
     }
 
     public boolean containsValue(Object value) {
@@ -128,7 +138,7 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
     }
 
     public BPItem get(Object key) {
-        return map.get(key);
+        return map.get(key instanceof String ? new BPString((String)key) : key);
     }
 
     @Override
@@ -153,7 +163,7 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
     }
 
     public BPItem remove(Object key) {
-        return map.remove(key);
+        return map.remove(key instanceof String ? new BPString((String)key) : key);
     }
 
     public int size() {

@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -64,7 +65,9 @@ public class BPString extends BPItem {
         if (encodingType == EncodingType.ASCII) {
             return ASCII.encode(value).array();
         } else {
-            return UTF16.encode(value).array();
+            // Need to strip out the 2-byte BOM at the start
+            byte[] converted = UTF16.encode(value).array();
+            return Arrays.copyOfRange(converted, 2, converted.length);
         }
     }
 
