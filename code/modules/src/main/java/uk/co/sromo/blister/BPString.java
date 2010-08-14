@@ -51,6 +51,11 @@ public class BPString extends BPItem {
         this.encodingType = encodingType;
     }
 
+    // convenience method to enable BPDict to get things, without caching the resulting BPStrings
+    BPString(String value) {
+        this(value, EncodingType.ASCII);
+    }
+
     byte[] asBytes() {
         if (encodingType == EncodingType.ASCII) {
             return ASCII.encode(value).array();
