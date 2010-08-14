@@ -1,5 +1,7 @@
 package uk.co.sromo.blister;
 
+import java.nio.ByteBuffer;
+
 /**
  * Created by IntelliJ IDEA.
  * User: daniel
@@ -22,27 +24,27 @@ abstract class BinaryPlistOffsetReader {
         }
     }
 
-    abstract int getOffset(ByteArrayWrapper bytes);
+    abstract int getOffset(ByteBuffer bytes);
 
 
     private static class BinaryPlistOffsetReader1 extends BinaryPlistOffsetReader {
         @Override
-        int getOffset(ByteArrayWrapper bytes) {
-            return (int) bytes.readByte();
+        int getOffset(ByteBuffer bytes) {
+            return (int) bytes.get();
         }
     }
 
     private static class BinaryPlistOffsetReader2 extends BinaryPlistOffsetReader {
         @Override
-        int getOffset(ByteArrayWrapper bytes) {
-            return (int) bytes.readShort();
+        int getOffset(ByteBuffer bytes) {
+            return (int) bytes.getShort();
         }
     }
 
     private static class BinaryPlistOffsetReader4 extends BinaryPlistOffsetReader {
         @Override
-        int getOffset(ByteArrayWrapper bytes) {
-            return (int) bytes.readInt();
+        int getOffset(ByteBuffer bytes) {
+            return (int) bytes.getInt();
         }
     }
 }

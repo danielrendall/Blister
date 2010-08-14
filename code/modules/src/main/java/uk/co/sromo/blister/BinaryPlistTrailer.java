@@ -1,5 +1,7 @@
 package uk.co.sromo.blister;
 
+import java.nio.ByteBuffer;
+
 /**
  * Created by IntelliJ IDEA.
  * User: daniel
@@ -23,14 +25,14 @@ class BinaryPlistTrailer {
      * } CFBinaryPlistTrailer;
      */
     static BinaryPlistTrailer build(byte[] data) {
-        ByteArrayWrapper bytes = new ByteArrayWrapper(data);
-        bytes.skip(5);
-        short _sortVersion = bytes.readByte();
-        short _offsetIntSize = bytes.readByte();
-        short _objectRefSize = bytes.readByte();
-        long _numObjects = bytes.readLong();
-        long _topObject = bytes.readLong();
-        long _offsetTableOffset = bytes.readLong();
+        ByteBuffer bytes = ByteBuffer.wrap(data);
+        bytes.position(5);
+        short _sortVersion = bytes.get();
+        short _offsetIntSize = bytes.get();
+        short _objectRefSize = bytes.get();
+        long _numObjects = bytes.getLong();
+        long _topObject = bytes.getLong();
+        long _offsetTableOffset = bytes.getLong();
         return new BinaryPlistTrailer(_sortVersion, _offsetIntSize, _objectRefSize, _numObjects, _topObject, _offsetTableOffset);
     }
 

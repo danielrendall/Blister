@@ -2,6 +2,7 @@ package uk.co.sromo.blister;
 
 import org.apache.log4j.Logger;
 
+import java.nio.ByteBuffer;
 import java.util.Formatter;
 import java.util.Locale;
 
@@ -23,9 +24,9 @@ class BinaryPlistHeader {
     private final int fileFormatVersion;
 
     static BinaryPlistHeader build(byte[] data) throws BinaryPlistException {
-        ByteArrayWrapper bytes = new ByteArrayWrapper(data);
-        long first = bytes.readInt();
-        long second = bytes.readInt();
+        ByteBuffer bytes = ByteBuffer.wrap(data);
+        long first = bytes.getInt();
+        long second = bytes.getInt();
         long secondMasked = second & 0xffff0000;
         if ((first != MAGIC_1) || (secondMasked != MAGIC_2)) {
             log.warn("Magic numbers wrong - were " + formatter.format("%1$2x %2$2x", first, second));
