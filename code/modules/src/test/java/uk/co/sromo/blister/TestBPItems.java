@@ -94,4 +94,23 @@ public class TestBPItems {
         Assert.assertEquals(array1.get(1), array2.get(1));
         Assert.assertEquals(array1.get(2), array2.get(2));
     }
+
+    @Test
+    public void TestEnumeratedConstants() throws BinaryPlistException {
+        BPDict dict = new BPDict()
+                .with("key1", Numerals.FIRST)
+                .with("key2", Numerals.SECOND)
+                .with("key3", Numerals.THIRD);
+        byte[] bytes = BinaryPlist.encode(dict);
+
+        BPItem root = BinaryPlist.decode(bytes);
+        Assert.assertEquals("Not a dictionary", BPItem.Type.Dict, root.getType());
+        BPDict newDict = (BPDict) root;
+
+        Assert.assertEquals(dict.get("key1", Numerals.DIFFERENT_FAIL), newDict.get("key1", Numerals.FAIL));
+        Assert.assertEquals(dict.get("key2", Numerals.DIFFERENT_FAIL), newDict.get("key2", Numerals.FAIL));
+        Assert.assertEquals(dict.get("key3", Numerals.DIFFERENT_FAIL), newDict.get("key3", Numerals.FAIL));
+        Assert.assertEquals(Numerals.FAIL, newDict.get("key4", Numerals.FAIL));
+
+    }
 }

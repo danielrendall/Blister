@@ -64,6 +64,10 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
         return with(key, BPBoolean.get(value));
     }
 
+    public <T extends Enum<T>> BPDict with(String key, Enum<T> value) {
+        return with(key, value.toString());
+    }
+
     public BPDict with(BPString key, String value) {
         return with(key, BPString.get(value));
     }
@@ -74,6 +78,10 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
 
     public BPDict with(BPString key, boolean value) {
         return with(key, BPBoolean.get(value));
+    }
+
+    public <T extends Enum<T>> BPDict with(BPString key, Enum<T> value) {
+        return with(key, value.toString());
     }
 
     public String get(String key, String fallback) throws BinaryPlistException {
@@ -114,6 +122,16 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
             throw new BinaryPlistException("Not a real");
         }
         return ((BPReal) value).getValue();
+    }
+
+    public <T extends Enum<T>> T get(String key, T fallback) throws BinaryPlistException {
+        BPString bpKey = new BPString(key);
+        if (!containsKey(bpKey)) return fallback;
+        BPItem value = get(bpKey);
+        if (value.getType() != BPItem.Type.String) {
+            throw new BinaryPlistException("Not a string");
+        }
+        return Enum.valueOf(fallback.getDeclaringClass(), ((BPString)value).getValue());
     }
 
     public void clear() {
@@ -190,4 +208,5 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
     public void accept(BPVisitor visitor) {
         visitor.visit(this);
     }
+
 }
