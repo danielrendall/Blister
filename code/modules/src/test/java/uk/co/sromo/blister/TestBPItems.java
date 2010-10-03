@@ -113,4 +113,25 @@ public class TestBPItems {
         Assert.assertEquals(Numerals.FAIL, newDict.get("key4", Numerals.FAIL));
 
     }
+
+    @Test
+    public void TestEnumeratedKeys() throws BinaryPlistException {
+        BPDict dict = new BPDict()
+                .with(Keys.ALPHA, "value1")
+                .with(Keys.BETA, 14)
+                .with(Keys.GAMMA, true)
+                .with(Keys.DELTA, Numerals.FIRST)
+                .with("key5", "finished");
+        byte[] bytes = BinaryPlist.encode(dict);
+
+        BPItem root = BinaryPlist.decode(bytes);
+        Assert.assertEquals("Not a dictionary", BPItem.Type.Dict, root.getType());
+        BPDict newDict = (BPDict) root;
+
+        Assert.assertEquals(dict.get(Keys.ALPHA, ""), newDict.get(Keys.ALPHA, "FAIL"));
+        Assert.assertEquals(dict.get(Keys.BETA, 0), newDict.get(Keys.BETA, -1));
+        Assert.assertEquals(dict.get(Keys.GAMMA, true), newDict.get(Keys.GAMMA, false));
+        Assert.assertEquals(dict.get(Keys.DELTA, Numerals.DIFFERENT_FAIL), newDict.get(Keys.DELTA, Numerals.FAIL));
+        Assert.assertEquals(dict.get("key5", ""), newDict.get("key5", "FAIL"));
+    }
 }

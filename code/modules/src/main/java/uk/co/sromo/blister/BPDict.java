@@ -68,6 +68,22 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
         return with(key, value.toString());
     }
 
+    public <S extends Enum<S>> BPDict with(S key, String value) {
+        return with(key.toString(), BPString.get(value));
+    }
+
+    public <S extends Enum<S>> BPDict with(S key, int value) {
+        return with(key.toString(), BPInt.get(value));
+    }
+
+    public <S extends Enum<S>> BPDict with(S key, boolean value) {
+        return with(key.toString(), BPBoolean.get(value));
+    }
+
+    public <S extends Enum<S>, T extends Enum<T>> BPDict with(S key, Enum<T> value) {
+        return with(key, value.toString());
+    }
+
     public BPDict with(BPString key, String value) {
         return with(key, BPString.get(value));
     }
@@ -132,6 +148,26 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
             throw new BinaryPlistException("Not a string");
         }
         return Enum.valueOf(fallback.getDeclaringClass(), ((BPString)value).getValue());
+    }
+
+    public <S extends Enum<S>> String get(S key, String fallback) throws BinaryPlistException {
+        return get(key.toString(), fallback);
+    }
+
+    public <S extends Enum<S>> int get(S key, int fallback) throws BinaryPlistException {
+        return get(key.toString(), fallback);
+    }
+
+    public <S extends Enum<S>> boolean get(S key, boolean fallback) throws BinaryPlistException {
+        return get(key.toString(), fallback);
+    }
+
+    public <S extends Enum<S>> double get(S key, double fallback) throws BinaryPlistException {
+        return get(key.toString(), fallback);
+    }
+
+    public <S extends Enum<S>, T extends Enum<T>> T get(S key, T fallback) throws BinaryPlistException {
+        return get(key.toString(), fallback);
     }
 
     public void clear() {
