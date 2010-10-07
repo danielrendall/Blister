@@ -64,6 +64,10 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
         return with(key, BPBoolean.get(value));
     }
 
+    public <S extends Enum<S>> BPDict with(S key, BPItem value) {
+        return with(key.toString(), value);
+    }
+
     public <T extends Enum<T>> BPDict with(String key, Enum<T> value) {
         return with(key, value.toString());
     }
@@ -110,8 +114,7 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
         return ((BPString) value).getValue();
     }
 
-    public int get(String key, int fallback) throws BinaryPlistException {
-        BPString bpKey = new BPString(key);
+    public int get(BPString bpKey, int fallback) throws BinaryPlistException {
         if (!containsKey(bpKey)) return fallback;
         BPItem value = get(bpKey);
         if (value.getType() != BPItem.Type.Int) {
@@ -120,8 +123,7 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
         return ((BPInt) value).getValue();
     }
 
-    public boolean get(String key, boolean fallback) throws BinaryPlistException {
-        BPString bpKey = new BPString(key);
+    public boolean get(BPString bpKey, boolean fallback) throws BinaryPlistException {
         if (!containsKey(bpKey)) return fallback;
         BPItem value = get(bpKey);
         if (value.getType() != BPItem.Type.Boolean) {
@@ -130,8 +132,7 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
         return ((BPBoolean) value).getValue();
     }
 
-    public double get(String key, double fallback) throws BinaryPlistException {
-        BPString bpKey = new BPString(key);
+    public double get(BPString bpKey, double fallback) throws BinaryPlistException {
         if (!containsKey(bpKey)) return fallback;
         BPItem value = get(bpKey);
         if (value.getType() != BPItem.Type.Real) {
@@ -140,14 +141,38 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
         return ((BPReal) value).getValue();
     }
 
-    public <T extends Enum<T>> T get(String key, T fallback) throws BinaryPlistException {
-        BPString bpKey = new BPString(key);
+    public <T extends Enum<T>> T get(BPString bpKey, T fallback) throws BinaryPlistException {
         if (!containsKey(bpKey)) return fallback;
         BPItem value = get(bpKey);
         if (value.getType() != BPItem.Type.String) {
             throw new BinaryPlistException("Not a string");
         }
         return Enum.valueOf(fallback.getDeclaringClass(), ((BPString)value).getValue());
+    }
+
+    public String get(BPString bpKey, String fallback) throws BinaryPlistException {
+        if (!containsKey(bpKey)) return fallback;
+        BPItem value = get(bpKey);
+        if (value.getType() != BPItem.Type.String) {
+            throw new BinaryPlistException("Not a string");
+        }
+        return ((BPString) value).getValue();
+    }
+
+    public int get(String key, int fallback) throws BinaryPlistException {
+        return get(new BPString(key), fallback);
+    }
+
+    public boolean get(String key, boolean fallback) throws BinaryPlistException {
+        return get(new BPString(key), fallback);
+    }
+
+    public double get(String key, double fallback) throws BinaryPlistException {
+        return get(new BPString(key), fallback);
+    }
+
+    public <T extends Enum<T>> T get(String key, T fallback) throws BinaryPlistException {
+        return get(new BPString(key), fallback);
     }
 
     public <S extends Enum<S>> String get(S key, String fallback) throws BinaryPlistException {
@@ -175,7 +200,19 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
     }
 
     public boolean containsKey(Object key) {
-        return map.containsKey(key instanceof String ? new BPString((String)key) : key);
+        return containsKey(key.toString());
+    }
+
+    public boolean containsKey(String key) {
+        return containsKey(new BPString(key));
+    }
+
+    public <S extends Enum> boolean containsKey(S key) {
+        return map.containsKey(key.toString());
+    }
+
+    public boolean containsKey(BPString key) {
+        return map.containsKey(key);
     }
 
     public boolean containsValue(Object value) {
@@ -192,7 +229,19 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
     }
 
     public BPItem get(Object key) {
-        return map.get(key instanceof String ? new BPString((String)key) : key);
+        return get(key.toString());
+    }
+
+    public <S extends Enum> BPItem get(S key) {
+        return get(key.toString());
+    }
+
+    public BPItem get(String key) {
+        return get(new BPString(key));
+    }
+
+    public BPItem get(BPString key) {
+        return map.get(key);
     }
 
     @Override
@@ -217,7 +266,19 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
     }
 
     public BPItem remove(Object key) {
-        return map.remove(key instanceof String ? new BPString((String)key) : key);
+        return remove(key.toString());
+    }
+
+    public <S extends Enum> BPItem remove(S key) {
+        return remove(key.toString());
+    }
+
+    public BPItem remove(String key) {
+        return remove(new BPString(key));
+    }
+
+    public BPItem remove(BPString key) {
+        return map.remove(key);
     }
 
     public int size() {
