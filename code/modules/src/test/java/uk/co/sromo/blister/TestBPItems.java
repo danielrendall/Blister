@@ -128,6 +128,11 @@ public class TestBPItems {
         Assert.assertEquals("Not a dictionary", BPItem.Type.Dict, root.getType());
         BPDict newDict = (BPDict) root;
 
+        Assert.assertTrue(newDict.containsKey(Keys.ALPHA));
+        Assert.assertTrue(newDict.containsKey(Keys.BETA));
+        Assert.assertTrue(newDict.containsKey(Keys.GAMMA));
+        Assert.assertTrue(newDict.containsKey(Keys.DELTA));
+
         Assert.assertEquals(dict.get(Keys.ALPHA, ""), newDict.get(Keys.ALPHA, "FAIL"));
         Assert.assertEquals(dict.get(Keys.BETA, 0), newDict.get(Keys.BETA, -1));
         Assert.assertEquals(dict.get(Keys.GAMMA, true), newDict.get(Keys.GAMMA, false));
@@ -148,6 +153,11 @@ public class TestBPItems {
         BPItem root = BinaryPlist.decode(bytes);
         Assert.assertEquals("Not a dictionary", BPItem.Type.Dict, root.getType());
         BPDict newDict = (BPDict) root;
+
+        Assert.assertTrue(newDict.containsKey(Keys.ALPHA));
+        Assert.assertTrue(newDict.containsKey(Keys.BETA));
+        Assert.assertTrue(newDict.containsKey(Keys.GAMMA));
+        Assert.assertTrue(newDict.containsKey(Keys.DELTA));
 
         Assert.assertEquals(dict.get(Keys.ALPHA, ""), newDict.get("ALPHA", "FAIL"));
         Assert.assertEquals(dict.get(Keys.BETA, 0), newDict.get(Keys.BETA, -1));

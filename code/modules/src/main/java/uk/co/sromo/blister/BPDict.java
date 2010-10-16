@@ -208,7 +208,7 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
     }
 
     public <S extends Enum> boolean containsKey(S key) {
-        return map.containsKey(key.toString());
+        return containsKey(key.toString());
     }
 
     public boolean containsKey(BPString key) {
