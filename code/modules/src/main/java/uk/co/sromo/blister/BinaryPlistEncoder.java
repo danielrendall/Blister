@@ -112,20 +112,34 @@ public class BinaryPlistEncoder implements BPVisitor {
 
     public void visit(BPInt item) {
         if (!objectRefs.containsKey(item)) {
-            int value = item.getValue();
-            if (value < 256) {
-                 store(item, new byte[] {(byte) (BinaryPlist.INT | 0x00),
-                        (byte) value});
-            } else if (value < 65536) {
-                 store(item, new byte[] {(byte) (BinaryPlist.INT | 0x01),
-                        (byte) ((value >> 8) & 0xff),
-                        (byte) (value & 0xff) });
+            long lValue = item.getLongValue();
+            if (lValue < 0 || item.getSize() == BPInt.Size.Long) {
+                store(item, new byte[] {(byte) (BinaryPlist.INT | 0x03),
+                        (byte) ((lValue >> 56) & 0xff),
+                        (byte) ((lValue >> 48) & 0xff),
+                        (byte) ((lValue >> 40) & 0xff),
+                        (byte) ((lValue >> 32) & 0xff),
+                        (byte) ((lValue >> 24) & 0xff),
+                        (byte) ((lValue >> 16) & 0xff),
+                        (byte) ((lValue >> 8) & 0xff),
+                        (byte) (lValue & 0xff) });
+
             } else {
-                 store(item, new byte[] {(byte) (BinaryPlist.INT | 0x02),
-                        (byte) ((value >> 24) & 0xff),
-                        (byte) ((value >> 16) & 0xff),
-                        (byte) ((value >> 8) & 0xff),
-                        (byte) (value & 0xff) });
+                int value = item.getValue();
+                if (value < 256) {
+                     store(item, new byte[] {(byte) (BinaryPlist.INT | 0x00),
+                            (byte) value});
+                } else if (value < 65536) {
+                     store(item, new byte[] {(byte) (BinaryPlist.INT | 0x01),
+                            (byte) ((value >> 8) & 0xff),
+                            (byte) (value & 0xff) });
+                } else {
+                     store(item, new byte[] {(byte) (BinaryPlist.INT | 0x02),
+                            (byte) ((value >> 24) & 0xff),
+                            (byte) ((value >> 16) & 0xff),
+                            (byte) ((value >> 8) & 0xff),
+                            (byte) (value & 0xff) });
+                }
             }
         }
     }
