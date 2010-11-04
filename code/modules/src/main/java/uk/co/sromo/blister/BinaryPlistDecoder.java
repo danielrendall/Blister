@@ -115,7 +115,7 @@ public class BinaryPlistDecoder {
                             log.debug(String.format("Int %d bytes", numIntBytes));
                             byte[] intData = new byte[numIntBytes];
                             data.get(intData);
-                            toReturn = new BPInt(intData);
+                            toReturn = BPInt.from(intData);
                             break;
                         case BinaryPlist.REAL:
                             int numRealBytes = twoToThe(littleNibble);
@@ -216,7 +216,7 @@ public class BinaryPlistDecoder {
         int numIntBytes = twoToThe(littleNibble);
         byte[] intData = new byte[numIntBytes];
         data.get(intData);
-        BPInt ret = new BPInt(intData);
+        BPInt ret = BPInt.from(intData);
         return ret.getValue();
     }
 

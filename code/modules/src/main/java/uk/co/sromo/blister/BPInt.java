@@ -11,34 +11,64 @@ import java.util.concurrent.ConcurrentHashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class BPInt extends BPItem {
-    private final int value;
+    public enum Size {Int, Long}
+
+    private final int iValue;
+    private final long lValue;
+    private final Size size;
     private static final Map<String, BPString> cache = new ConcurrentHashMap<String, BPString>(512, 0.75f, 16);
 
     public static BPInt get(int value) {
         return new BPInt(value);
     }
 
-    BPInt(byte[] bytes) {
-        int size = bytes.length;
-        int _data = 0;
-        if (size == 1) {
-            _data |= (0xff & bytes[0]);
-        } else if (size == 2) {
-            _data |= ((0xff & bytes[0]) << 8) | (0xff & bytes[1]);
-        } else if (size == 4) {
-            _data |= ((0xff & bytes[0]) << 24) | ((0xff & bytes[1]) << 16) | ((0xff & bytes[2]) << 8) | (0xff & bytes[3]);
-        } else {
-            throw new RuntimeException("Wasn't expecting an int to be " + size + " bytes");
-        }
-        this.value = _data;
+    public static BPInt get(long value) {
+        return new BPInt(value);
     }
 
-    private BPInt(int value) {
-        this.value = value;
+    public static BPInt from(byte[] bytes) {
+        int size = bytes.length;
+        if (size == 1) {
+            return new BPInt(0xff & bytes[0]);
+        } else if (size == 2) {
+            return new BPInt(((0xff & bytes[0]) << 8) | (0xff & bytes[1]));
+        } else if (size == 4) {
+            if (Integer.highestOneBit(0xff & bytes[0]) != 128) {
+                return new BPInt(((0xff & bytes[0]) << 24) | ((0xff & bytes[1]) << 16) | ((0xff & bytes[2]) << 8) | (0xff & bytes[3]));
+            } else {
+                return new BPInt(((0xff & (long)bytes[0]) << 24) | ((0xff & (long)bytes[1]) << 16) | ((0xff & (long)bytes[2]) << 8) | (0xff & (long)bytes[3]));
+            }
+        } else {
+            long msb = (long) (((0xff & (long)bytes[0]) << 24) | ((0xff & (long)bytes[1]) << 16) | ((0xff & (long)bytes[2]) << 8) | (0xff & (long)bytes[3]));
+            long lsb = (long) (((0xff & (long)bytes[4]) << 24) | ((0xff & (long)bytes[5]) << 16) | ((0xff & (long)bytes[6]) << 8) | (0xff & (long)bytes[7]));
+            log.debug("msb: " + msb + " lsb: " + lsb);
+            log.debug("msb <<32: " + (msb<<32) + " lsb: " + lsb);
+            return new BPInt((msb << 32) + lsb);
+        }
+    }
+
+    private BPInt(int iValue) {
+        this.iValue = iValue;
+        this.lValue = iValue;
+        this.size = Size.Int;
+    }
+
+    private BPInt(long lValue) {
+        this.iValue = (int) lValue;
+        this.lValue = lValue;
+        this.size = Size.Long;
     }
 
     public int getValue() {
-        return value;
+        return iValue;
+    }
+
+    public long getLongValue() {
+        return lValue;
+    }
+
+    public Size getSize() {
+        return size;
     }
 
     @Override
@@ -48,19 +78,19 @@ public class BPInt extends BPItem {
 
         BPInt bpInt = (BPInt) o;
 
-        if (value != bpInt.value) return false;
+        if (lValue != bpInt.lValue) return false;
 
         return true;
     }
 
     @Override
     public String toString() {
-        return Integer.toString(value);
+        return (size == Size.Long) ? Long.toString(lValue) : Integer.toString(iValue);
     }
 
     @Override
     public int hashCode() {
-        return value;
+        return (size == Size.Long) ? (int)(lValue ^ (lValue >>> 32 )) : iValue;
     }
 
     @Override
@@ -72,4 +102,5 @@ public class BPInt extends BPItem {
     public void accept(BPVisitor visitor) {
         visitor.visit(this);
     }
+
 }
