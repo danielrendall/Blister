@@ -168,7 +168,38 @@ public class TestBPItems {
     }
 
     @Test
-    public void TestLongs() throws IOException, BinaryPlistException {
+    public void TestSelectedIntegers() throws IOException, BinaryPlistException {
+        InputStream stream = TestBPItems.class.getResourceAsStream("/IntArray.plist");
+        byte[] bytes = StreamUtils.getBytes(stream);
+        BPItem root = BinaryPlist.decode(bytes);
+        Assert.assertEquals("Not an array", BPItem.Type.Array, root.getType());
+        DumpVisitor dv = new DumpVisitor();
+        dv.visit((BPArray)root);
+//        Assert.assertEquals(1, (((BPDict) root).get("Int0", 0)));
+//        for (int i=0; i<64; i++) {
+//            BPInt theInt = (BPInt)(((BPDict) root).get("Int" + i));
+//            if (i < 31) {
+//                Assert.assertEquals("Testing 1 << " + i, ((long)1 << i), theInt.getValue());
+//            } else {
+//                Assert.assertEquals("Testing 1 << " + i, ((long)1 << i), theInt.getLongValue());
+//            }
+//        }
+
+//        Assert.assertEquals(1 << 1, (((BPDict) root).get("Int1", 0)));
+//        Assert.assertEquals(1 << 15, (((BPDict) root).get("Int15", 0)));
+//        Assert.assertEquals(1 << 16, (((BPDict) root).get("Int16", 0)));
+//        Assert.assertEquals(1 << 30, (((BPDict) root).get("Int30", 0)));
+//        Assert.assertEquals(1 << 31, (((BPDict) root).get("Int31", 0)));
+//        Assert.assertEquals(-(1 << 0), (((BPDict) root).get("Int-1", 0)));
+//        Assert.assertEquals(-(1 << 14), (((BPDict) root).get("Int-15", 0)));
+//        Assert.assertEquals(-(1 << 15), (((BPDict) root).get("Int-16", 0)));
+//        Assert.assertEquals(-(1 << 29), (((BPDict) root).get("Int-30", 0)));
+//        Assert.assertEquals(-(1 << 30), (((BPDict) root).get("Int-31", 0)));
+//        Assert.assertEquals(-(1 << 31), (((BPDict) root).get("Int-32", 0)));
+    }
+
+    @Test
+    public void TestAllLongs() throws IOException, BinaryPlistException {
         InputStream stream = TestBPItems.class.getResourceAsStream("/Longs.plist");
         byte[] bytes = StreamUtils.getBytes(stream);
         BPItem root = BinaryPlist.decode(bytes);
