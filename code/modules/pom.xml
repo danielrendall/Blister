@@ -4,7 +4,7 @@
     <groupId>uk.co.sromo</groupId>
     <artifactId>blister</artifactId>
     <packaging>jar</packaging>
-    <version>1.6</version>
+    <version>1.7-SNAPSHOT</version>
     <name>blister</name>
     <url>http://maven.apache.org</url>
     <dependencies>
