@@ -1,10 +1,9 @@
 package uk.co.sromo.blister;
 
-import org.apache.log4j.Logger;
-
 import java.nio.ByteBuffer;
 import java.util.Formatter;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,7 +14,7 @@ import java.util.Locale;
  */
 class BinaryPlistHeader {
 
-    private final static Logger log = Logger.getLogger(BinaryPlistHeader.class);
+    private final static Logger log = Logger.getLogger(BinaryPlistHeader.class.getSimpleName());
     private final static Formatter formatter = new Formatter(Locale.UK);
 
     public final static long MAGIC_1 = 0x62706c69; // bpli
@@ -28,7 +27,7 @@ class BinaryPlistHeader {
         long first = bytes.getInt();
         long second = bytes.getInt();
         if ((first != MAGIC_1) || (second != MAGIC_2)) {
-            log.warn("Magic numbers wrong - were " + formatter.format("%1$2x %2$2x", first, second));
+            log.warning("Magic numbers wrong - were " + formatter.format("%1$2x %2$2x", first, second));
             throw new BinaryPlistException("Bad magic number");
         }
         return new BinaryPlistHeader((int)(second & 0x0000ffff));

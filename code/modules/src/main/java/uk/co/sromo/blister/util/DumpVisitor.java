@@ -1,6 +1,9 @@
-package uk.co.sromo.blister;
+package uk.co.sromo.blister.util;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
+import uk.co.sromo.blister.*;
+
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,13 +13,17 @@ import org.apache.log4j.Logger;
  * To change this template use File | Settings | File Templates.
  */
 public class DumpVisitor implements BPVisitor {
-    private final static Logger log = Logger.getLogger(DumpVisitor.class);
 
     int depth = 0;
     String spaces = "                                         ";
+    StringBuilder sb = new StringBuilder();
 
     private void print(String aString) {
-        log.debug(spaces.substring(0, depth) + aString);
+        sb.append(spaces.substring(0, depth)).append(aString).append("\n");
+    }
+
+    public String getXml() {
+        return sb.toString();
     }
 
     public void visit(BPArray item) {
@@ -30,7 +37,7 @@ public class DumpVisitor implements BPVisitor {
     }
 
     public void visit(BPBoolean item) {
-        print("<boolean>" + item + "</boolean>");
+        print(item.getValue() ? "<true/>" : "<false/>");
     }
 
     public void visit(BPData item) {
@@ -53,7 +60,7 @@ public class DumpVisitor implements BPVisitor {
     }
 
     public void visit(BPInt item) {
-        print("<int>" + item + "</int>");
+        print("<int>" + Long.toString(item.getLongValue()) + "</int>");
     }
 
     public void visit(BPNull item) {

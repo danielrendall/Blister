@@ -1,12 +1,14 @@
 package uk.co.sromo.blister;
 
-import org.apache.log4j.lf5.util.StreamUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import uk.co.sromo.blister.util.DumpVisitor;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,6 +18,9 @@ import java.io.InputStream;
  * To change this template use File | Settings | File Templates.
  */
 public class TestBPItems {
+
+
+    private final static Logger log = Logger.getLogger(TestBPItems.class.getSimpleName());
 
     public final static String ASCII_STRING_1 = "Quite Interesting";
     public final static String ASCII_STRING_2 = "RatherDull";
@@ -34,7 +39,7 @@ public class TestBPItems {
     @Test
     public void TestReadingBinaryUnicode() throws IOException, BinaryPlistException {
         InputStream stream = TestBPItems.class.getResourceAsStream("/BinaryUnicode.plist");
-        byte[] bytes = StreamUtils.getBytes(stream);
+        byte[] bytes = IOUtils.toByteArray(stream);
         BPItem root = BinaryPlist.decode(bytes);
         Assert.assertEquals("Not a dictionary", BPItem.Type.Dict, root.getType());
 
@@ -170,7 +175,7 @@ public class TestBPItems {
     @Test
     public void TestSelectedIntegers() throws IOException, BinaryPlistException {
         InputStream stream = TestBPItems.class.getResourceAsStream("/IntArray.plist");
-        byte[] bytes = StreamUtils.getBytes(stream);
+        byte[] bytes = IOUtils.toByteArray(stream);
         BPItem root = BinaryPlist.decode(bytes);
         Assert.assertEquals("Not an array", BPItem.Type.Array, root.getType());
         byte[] newBytes = BinaryPlist.encode(root);
@@ -189,11 +194,10 @@ public class TestBPItems {
     @Test
     public void TestAllLongs() throws IOException, BinaryPlistException {
         InputStream stream = TestBPItems.class.getResourceAsStream("/Longs.plist");
-        byte[] bytes = StreamUtils.getBytes(stream);
+        byte[] bytes = IOUtils.toByteArray(stream);
         BPItem root = BinaryPlist.decode(bytes);
         Assert.assertEquals("Not a dictionary", BPItem.Type.Dict, root.getType());
-        DumpVisitor dv = new DumpVisitor();
-        dv.visit((BPDict)root);
+        log.fine(BinaryPlist.dump(root));
         Assert.assertEquals(1, (((BPDict) root).get("Int0", 0)));
         for (int i=0; i<64; i++) {
             BPInt theInt = (BPInt)(((BPDict) root).get("Int" + i));
@@ -204,27 +208,24 @@ public class TestBPItems {
             }
         }
 
-//        Assert.assertEquals(1 << 1, (((BPDict) root).get("Int1", 0)));
-//        Assert.assertEquals(1 << 15, (((BPDict) root).get("Int15", 0)));
-//        Assert.assertEquals(1 << 16, (((BPDict) root).get("Int16", 0)));
-//        Assert.assertEquals(1 << 30, (((BPDict) root).get("Int30", 0)));
-//        Assert.assertEquals(1 << 31, (((BPDict) root).get("Int31", 0)));
-//        Assert.assertEquals(-(1 << 0), (((BPDict) root).get("Int-1", 0)));
-//        Assert.assertEquals(-(1 << 14), (((BPDict) root).get("Int-15", 0)));
-//        Assert.assertEquals(-(1 << 15), (((BPDict) root).get("Int-16", 0)));
-//        Assert.assertEquals(-(1 << 29), (((BPDict) root).get("Int-30", 0)));
-//        Assert.assertEquals(-(1 << 30), (((BPDict) root).get("Int-31", 0)));
-//        Assert.assertEquals(-(1 << 31), (((BPDict) root).get("Int-32", 0)));
+        Assert.assertEquals(1 << 1, (((BPDict) root).get("Int1", 0)));
+        Assert.assertEquals(1 << 15, (((BPDict) root).get("Int15", 0)));
+        Assert.assertEquals(1 << 16, (((BPDict) root).get("Int16", 0)));
+        Assert.assertEquals(1 << 30, (((BPDict) root).get("Int30", 0)));
+        Assert.assertEquals(1 << 31, (((BPDict) root).get("Int31", 0)));
+        Assert.assertEquals(-(1 << 1), (((BPDict) root).get("Int-1", 0)));
+        Assert.assertEquals(-(1 << 15), (((BPDict) root).get("Int-15", 0)));
+        Assert.assertEquals(-(1 << 16), (((BPDict) root).get("Int-16", 0)));
+        Assert.assertEquals(-(1 << 30), (((BPDict) root).get("Int-30", 0)));
+        Assert.assertEquals(-(1 << 31), (((BPDict) root).get("Int-31", 0)));
     }
 
-    @Test @Ignore
+    @Test
     public void TestNumbers() throws IOException, BinaryPlistException {
         InputStream stream = TestBPItems.class.getResourceAsStream("/Numbers.plist");
-        byte[] bytes = StreamUtils.getBytes(stream);
+        byte[] bytes = IOUtils.toByteArray(stream);
         BPItem root = BinaryPlist.decode(bytes);
         Assert.assertEquals("Not a dictionary", BPItem.Type.Dict, root.getType());
-        DumpVisitor dv = new DumpVisitor();
-        dv.visit((BPDict)root);
-
+        log.fine(BinaryPlist.dump(root));
     }
 }

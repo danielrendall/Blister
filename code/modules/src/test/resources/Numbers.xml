@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>LargeInt</key>
+	<integer>9223372036840000000</integer>
+	<key>SmallInt</key>
+	<integer>2147483647</integer>
+	<key>SmallFloat</key>
+	<real>1.100000</real>
+	<key>LargeFloat</key>
+	<real>9999999999999999464902769475481793196872414789632.000000</real>
+	<key>Float1</key>
+	<real>1.1</real>
+	<key>Float2</key>
+	<real>10.1</real>
+	<key>Float3</key>
+	<real>100.1</real>
+	<key>Float4</key>
+	<real>1000.1</real>
+	<key>Float5</key>
+	<real>10000.1</real>
+	<key>Float6</key>
+	<real>100000.1</real>
+	<key>Float7</key>
+	<real>1000000.1</real>
+	<key>Double1</key>
+	<real>22222222222222222222222222222222222222222222222222.1</real>
+	<key>Double2</key>
+	<real>33333333333333333333333333333333333333333333333333.1</real>
+	<key>Double3</key>
+	<real>44444444444444444444444444444444444444444444444444.1</real>
+	<key>Double4</key>
+	<real>55555555555555555555555555555555555555555555555555.1</real>
+	<key>Double5</key>
+	<real>66666666666666666666666666666666666666666666666666.1</real>
+	<key>Double6</key>
+	<real>77777777777777777777777777777777777777777777777777.1</real>
+	<key>Double7</key>
+	<real>88888888888888888888888888888888888888888888888888.1</real>
+</dict>
+</plist>

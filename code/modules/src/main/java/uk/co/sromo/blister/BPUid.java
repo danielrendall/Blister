@@ -11,7 +11,7 @@ public class BPUid extends BPItem {
     private final byte[] value;
 
     public BPUid(byte[] value) {
-        log.warn("BPUid not implemented");
+        log.warning("BPUid not implemented");
         this.value = value;
     }
 

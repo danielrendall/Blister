@@ -1,6 +1,6 @@
 package uk.co.sromo.blister;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
  */
 class BinaryPlistOffsetTable {
 
-    private final static Logger log = Logger.getLogger(BinaryPlistOffsetTable.class);
+    private final static Logger log = Logger.getLogger(BinaryPlistOffsetTable.class.getSimpleName());
 
     private final int[] offsets;
     private final int size;
@@ -50,7 +50,7 @@ class BinaryPlistOffsetTable {
 
     void dump() {
         for (int i=0; i< size; i++) {
-            log.debug(String.format("%d: %d", i, offsets[i]));
+            log.fine(String.format("%d: %d", i, offsets[i]));
         }
     }
 }

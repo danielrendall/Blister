@@ -11,7 +11,7 @@ public class BPReal extends BPItem {
     private final double value;
 
     public BPReal(byte[] bytes) {
-        log.warn("BPReal not implemented");
+        log.warning("BPReal not implemented");
         value = 0.0d;
     }
 

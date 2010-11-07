@@ -15,7 +15,7 @@ public class BPDate extends BPItem {
 
     public BPDate(byte[] data) {
         this.data = data;
-        log.warn("BPDate not yet implemented");
+        log.warning("BPDate not yet implemented");
     }
 
     @Override

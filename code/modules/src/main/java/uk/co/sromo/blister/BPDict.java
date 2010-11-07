@@ -39,7 +39,7 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
             }
             BPItem value = decoder.getItemAtIndex(valueOffset);
             map.put((BPString)key, value);
-            log.debug(key.toString() + " = " + value.toString());
+            log.fine(key.toString() + " = " + value.toString());
         }
     }
 

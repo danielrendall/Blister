@@ -1,7 +1,5 @@
 package uk.co.sromo.blister;
 
-import org.apache.log4j.Logger;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -9,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,7 +18,7 @@ import java.util.Set;
  */
 public class BinaryPlistEncoder implements BPVisitor {
 
-    private final static Logger log = Logger.getLogger(BinaryPlistEncoder.class);
+    private final static Logger log = Logger.getLogger(BinaryPlistEncoder.class.getSimpleName());
     private final static byte[] EMPTY = new byte[0];
 
     private final Map<Integer, byte[]> objectData = new LinkedHashMap<Integer, byte[]>(); // object ref -> bytes for that object
@@ -262,7 +261,7 @@ public class BinaryPlistEncoder implements BPVisitor {
                     throw new EncodingException("Out of sync - got object " + objectRef + " but expected " + i);
                 }
                 offsets[i] = offset;
-                log.debug("Writing object " + objectRef + " at offset " + offset);
+                log.fine("Writing object " + objectRef + " at offset " + offset);
                 byte[] objectData = item.getValue();
                 if (collectionTypes.contains(objectRef)) {
                     objectData = resizeCollection(objectData, objectRefSize);
@@ -334,7 +333,7 @@ public class BinaryPlistEncoder implements BPVisitor {
         short type = (short)(0xff & input.get());
         int numberOfItems = (collectionData.length - 1) / 4; // number of object references to read
         int collectionSize = (type == BinaryPlist.DICT) ?  numberOfItems / 2 : numberOfItems;
-        log.debug("Resizing collection of type " + type + " size " + collectionSize + " with " + numberOfItems + " pointers");
+        log.fine("Resizing collection of type " + type + " size " + collectionSize + " with " + numberOfItems + " pointers");
         output.write(getObjectHeader(type, collectionSize));
         switch (objectRefSize) {
             case 1:

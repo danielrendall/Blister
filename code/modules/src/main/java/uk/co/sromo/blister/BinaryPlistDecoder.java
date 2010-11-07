@@ -1,9 +1,8 @@
 package uk.co.sromo.blister;
 
-import org.apache.log4j.Logger;
-
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,7 +22,7 @@ public class BinaryPlistDecoder {
     private final ByteBuffer data;
     private final BinaryPlistOffsetTable offsetTable;
 
-    private final static Logger log = Logger.getLogger(BinaryPlistDecoder.class);
+    private final static Logger log = Logger.getLogger(BinaryPlistDecoder.class.getSimpleName());
 
     private final Map<Integer, BPItem> items = new HashMap<Integer, BPItem>(); // offset, item
 
@@ -73,11 +72,11 @@ public class BinaryPlistDecoder {
 
     BPItem getItem(int offset) {
         if (items.containsKey(offset)) {
-            log.debug("Already have item at offset " + offset);
+            log.fine("Already have item at offset " + offset);
             return items.get(offset);
         } else {
             // mark whatever we return for expansion
-            log.debug("Marking item at offset " + offset + " for expansion");
+            log.fine("Marking item at offset " + offset + " for expansion");
             offsetsToExpand.offer(offset);
             BPItem toReturn = BPNull.Instance;
 
@@ -85,23 +84,23 @@ public class BinaryPlistDecoder {
             short next = (short) data.get();
             switch (next) {
                 case BinaryPlist.NULL:
-                    log.debug("Null");
+                    log.fine("Null");
                     toReturn = BPNull.Instance;
                     break;
                 case BinaryPlist.BOOL_FALSE:
-                    log.debug("Bool_False");
+                    log.fine("Bool_False");
                     toReturn = BPBoolean.FALSE;
                     break;
                 case BinaryPlist.BOOL_TRUE:
-                    log.debug("Bool_True");
+                    log.fine("Bool_True");
                     toReturn = BPBoolean.TRUE;
                     break;
                 case BinaryPlist.FILL:
-                    log.debug("Fill");
+                    log.fine("Fill");
                     toReturn = BPNull.Instance;
                     break;
                 case BinaryPlist.DATE:
-                    log.debug("Date");
+                    log.fine("Date");
                     byte[] dateData = new byte[8];
                     data.get(dateData);
                     toReturn = new BPDate(dateData);
@@ -112,46 +111,46 @@ public class BinaryPlistDecoder {
                     switch (bigNibble) {
                         case BinaryPlist.INT:
                             int numIntBytes = twoToThe(littleNibble);
-                            log.debug(String.format("Int %d bytes", numIntBytes));
+                            log.fine(String.format("Int %d bytes", numIntBytes));
                             byte[] intData = new byte[numIntBytes];
                             data.get(intData);
                             toReturn = BPInt.from(intData);
                             break;
                         case BinaryPlist.REAL:
                             int numRealBytes = twoToThe(littleNibble);
-                            log.debug(String.format("Real %d bytes", numRealBytes));
+                            log.fine(String.format("Real %d bytes", numRealBytes));
                             byte[] realData = new byte[numRealBytes];
                             data.get(realData);
                             toReturn = new BPReal(realData);
                             break;
                         case BinaryPlist.DATA:
                             int numDataBytes = (littleNibble < 0x0f) ? littleNibble : readAnInt();
-                            log.debug(String.format("Data %d bytes", numDataBytes));
+                            log.fine(String.format("Data %d bytes", numDataBytes));
                             byte[] dataData = new byte[numDataBytes];
                             data.get(dataData);
                             toReturn = new BPData(dataData);
                             break;
                         case BinaryPlist.STRING_ASCII:
                             int numStringAsciiChars = (littleNibble < 0x0f) ? littleNibble : readAnInt();
-                            log.debug(String.format("String_Ascii %d chars", numStringAsciiChars));
+                            log.fine(String.format("String_Ascii %d chars", numStringAsciiChars));
                             byte[] stringAsciiData = new byte[numStringAsciiChars];
                             data.get(stringAsciiData);
                             final BPString bpStringAscii = BPString.ascii(stringAsciiData);
-                            log.debug("String: " + bpStringAscii.getValue());
+                            log.fine("String: " + bpStringAscii.getValue());
                             toReturn = bpStringAscii;
                             break;
                         case BinaryPlist.STRING_UNICODE:
                             int numStringUnicodeChars = (littleNibble < 0x0f) ? littleNibble : readAnInt();
-                            log.debug(String.format("String_Unicode %d chars", numStringUnicodeChars));
+                            log.fine(String.format("String_Unicode %d chars", numStringUnicodeChars));
                             byte[] stringUnicodeData = new byte[numStringUnicodeChars << 1];
                             data.get(stringUnicodeData);
                             final BPString bpStringUnicode = BPString.unicode(stringUnicodeData);
-                            log.debug("String: " + bpStringUnicode.getValue());
+                            log.fine("String: " + bpStringUnicode.getValue());
                             toReturn = bpStringUnicode;
                             break;
                         case BinaryPlist.UID:
                             int numUidBytes = littleNibble + 1;
-                            log.debug(String.format("UID %d bytes", numUidBytes));
+                            log.fine(String.format("UID %d bytes", numUidBytes));
 
                             byte[] uidData = new byte[numUidBytes];
                             data.get(uidData);
@@ -159,7 +158,7 @@ public class BinaryPlistDecoder {
                             break;
                         case BinaryPlist.ARRAY:
                             int numArrayItems = (littleNibble < 0x0f) ? littleNibble : readAnInt();
-                            log.debug(String.format("Array %d items", numArrayItems));
+                            log.fine(String.format("Array %d items", numArrayItems));
                             int[] arrayItemOffsets = new int[numArrayItems];
                             for (int i=0; i< numArrayItems; i++) {
                                 arrayItemOffsets[i] = offsetReader.getOffset(data);
@@ -168,7 +167,7 @@ public class BinaryPlistDecoder {
                             break;
                         case BinaryPlist.SET:
                             int numSetItems = (littleNibble < 0x0f) ? littleNibble : readAnInt();
-                            log.debug(String.format("Set %d items", numSetItems));
+                            log.fine(String.format("Set %d items", numSetItems));
                             int[] setItemOffsets = new int[numSetItems];
                             for (int i=0; i< numSetItems; i++) {
                                 setItemOffsets[i] = offsetReader.getOffset(data);
@@ -177,7 +176,7 @@ public class BinaryPlistDecoder {
                             break;
                         case BinaryPlist.DICT:
                             int numDictItems = (littleNibble < 0x0f) ? littleNibble : readAnInt();
-                            log.debug(String.format("Dict %d items", numDictItems));
+                            log.fine(String.format("Dict %d items", numDictItems));
                             int[] keyOffsets = new int[numDictItems];
                             int[] valueOffsets = new int[numDictItems];
                             for (int i=0; i< numDictItems; i++) {
@@ -189,7 +188,7 @@ public class BinaryPlistDecoder {
                             toReturn = new BPDict(keyOffsets, valueOffsets);
                             break;
                         default:
-                            log.debug("Unused");
+                            log.fine("Unused");
                             toReturn = BPNull.Instance;
                             break;
 

@@ -4,7 +4,7 @@
     <groupId>uk.co.sromo</groupId>
     <artifactId>blister</artifactId>
     <packaging>jar</packaging>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.6</version>
     <name>blister</name>
     <url>http://maven.apache.org</url>
     <dependencies>
@@ -23,34 +23,6 @@
             <artifactId>junit</artifactId>
             <version>4.4</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.15</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.mail</groupId>
-                    <artifactId>mail</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.activation</groupId>
-                    <artifactId>activation</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.jms</groupId>
-                    <artifactId>jms</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.jmx</groupId>
-                    <artifactId>jmxri</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.jdmk</groupId>
-                    <artifactId>jmxtools</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>

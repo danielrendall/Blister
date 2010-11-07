@@ -1,5 +1,6 @@
 package uk.co.sromo.blister;
 
+import uk.co.sromo.blister.util.DumpVisitor;
 /**
  * Created by IntelliJ IDEA.
  * User: daniel
@@ -73,4 +74,9 @@ public class BinaryPlist {
         return encoder.getBytes();
     }
 
+    public static String dump(BPItem root) {
+        DumpVisitor dv = new DumpVisitor();
+        root.accept(dv);
+        return dv.getXml();
+    }
 }
