@@ -30,14 +30,14 @@ abstract class BinaryPlistOffsetReader {
     private static class BinaryPlistOffsetReader1 extends BinaryPlistOffsetReader {
         @Override
         int getOffset(ByteBuffer bytes) {
-            return (int) bytes.get();
+            return 0x000000ff & bytes.get();
         }
     }
 
     private static class BinaryPlistOffsetReader2 extends BinaryPlistOffsetReader {
         @Override
         int getOffset(ByteBuffer bytes) {
-            return (int) bytes.getShort();
+            return 0x0000ffff & bytes.getShort();
         }
     }
 

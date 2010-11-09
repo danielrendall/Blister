@@ -4,7 +4,7 @@
     <groupId>uk.co.sromo</groupId>
     <artifactId>blister</artifactId>
     <packaging>jar</packaging>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.7</version>
     <name>blister</name>
     <url>http://maven.apache.org</url>
     <dependencies>
@@ -12,6 +12,11 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>args4j</groupId>
+            <artifactId>args4j</artifactId>
+            <version>2.0.12</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -36,6 +41,24 @@
               <target>1.5</target>
             </configuration>
           </plugin>
+            <plugin>
+                <!-- NOTE: We don't need a groupId specification because the group is
+                             org.apache.maven.plugins ...which is assumed by default.
+                         -->
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-5</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>uk.co.sromo.blister.App</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+
+            </plugin>
         </plugins>
       </build>
 </project>

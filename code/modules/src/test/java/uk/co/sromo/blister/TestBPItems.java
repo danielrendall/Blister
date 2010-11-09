@@ -8,6 +8,7 @@ import uk.co.sromo.blister.util.DumpVisitor;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 /**
@@ -227,5 +228,41 @@ public class TestBPItems {
         BPItem root = BinaryPlist.decode(bytes);
         Assert.assertEquals("Not a dictionary", BPItem.Type.Dict, root.getType());
         log.fine(BinaryPlist.dump(root));
+    }
+
+    @Test
+    public void TestBPArrayWithPointerSize1() throws IOException, BinaryPlistException {
+        BPArray array = new BPArray();
+        for (int i=0; i< 130; i++) {
+            array.with(i);
+        }
+        byte[] bytes = BinaryPlist.encode(array);
+        BPItem root = BinaryPlist.decode(bytes);
+        Assert.assertEquals("Not an array", BPItem.Type.Array, root.getType());
+        int count=0;
+        for (Iterator it = array.iterator(); it.hasNext();) {
+            Assert.assertEquals(count, ((BPInt) it.next()).getValue());
+            count++;
+        }
+        Assert.assertEquals(130, count);
+
+    }
+
+    @Test
+    public void TestBPArrayWithPointerSize2() throws IOException, BinaryPlistException {
+        BPArray array = new BPArray();
+        for (int i=0; i< 32770; i++) {
+            array.with(i);
+        }
+        byte[] bytes = BinaryPlist.encode(array);
+        BPItem root = BinaryPlist.decode(bytes);
+        Assert.assertEquals("Not an array", BPItem.Type.Array, root.getType());
+        int count=0;
+        for (Iterator it = array.iterator(); it.hasNext();) {
+            Assert.assertEquals(count, ((BPInt) it.next()).getValue());
+            count++;
+        }
+        Assert.assertEquals(32770, count);
+
     }
 }
