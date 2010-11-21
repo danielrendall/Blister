@@ -25,16 +25,26 @@ public class TestBPItems {
 
     public final static String ASCII_STRING_1 = "Quite Interesting";
     public final static String ASCII_STRING_2 = "RatherDull";
+    public final static String ASCII_STRING_3 = "Normal ASCII string 1234567890";
 
     public final static String UNICODE_STRING_1 = "Ỡuitὲ InƬerestіng";
     public final static String UNICODE_STRING_2 = "ṜaŦherḒull";
+    public final static String UNICODE_STRING_3 = "Non-exotic non-ASCII string ©®ÀÈÌÒÙ";
 
     @Test
     public void TestBPStringTypeIdentification() {
-        BPString s1 = BPString.get(ASCII_STRING_1);
-        Assert.assertEquals("String wasn't ASCII", BPString.EncodingType.ASCII, s1.getEncodingType());
-        BPString s2 = BPString.get(UNICODE_STRING_1);
-        Assert.assertEquals("String wasn't Unicode", BPString.EncodingType.UTF16, s2.getEncodingType());
+        BPString ascii1 = BPString.get(ASCII_STRING_1);
+        Assert.assertEquals("String wasn't ASCII", BPString.EncodingType.ASCII, ascii1.getEncodingType());
+        BPString unicode1 = BPString.get(UNICODE_STRING_1);
+        Assert.assertEquals("String wasn't Unicode", BPString.EncodingType.UTF16, unicode1.getEncodingType());
+        BPString ascii2 = BPString.get(ASCII_STRING_2);
+        Assert.assertEquals("String wasn't ASCII", BPString.EncodingType.ASCII, ascii2.getEncodingType());
+        BPString unicode2 = BPString.get(UNICODE_STRING_2);
+        Assert.assertEquals("String wasn't Unicode", BPString.EncodingType.UTF16, unicode2.getEncodingType());
+        BPString ascii3 = BPString.get(ASCII_STRING_3);
+        Assert.assertEquals("String wasn't ASCII", BPString.EncodingType.ASCII, ascii3.getEncodingType());
+        BPString unicode3 = BPString.get(UNICODE_STRING_3);
+        Assert.assertEquals("String wasn't Unicode", BPString.EncodingType.UTF16, unicode3.getEncodingType());
     }
 
     @Test

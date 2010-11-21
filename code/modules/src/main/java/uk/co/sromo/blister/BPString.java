@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,7 +18,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class BPString extends BPItem {
     private static final Charset ASCII = Charset.forName("ASCII");
+    private static final Charset UTF8 = Charset.forName("UTF8");
     private static final Charset UTF16 = Charset.forName("UTF16");
+    private static final Pattern ASCII_CHECK_REGEX = Pattern.compile("^[\\p{ASCII}]+$");
 
     enum EncodingType {ASCII, UTF16};
 
@@ -36,19 +39,10 @@ public class BPString extends BPItem {
         return new BPString(string, encodingType);
     }
 
-    // externally created strings are assumed to be unicode
-    // TODO - we could be cleverer and check to see if a string can be encoded in ASCII
     public static BPString get(String string) {
-//        String roundTripped = ASCII.decode(ASCII.encode(string)).toString();
-        for (int i=0; i < string.length(); i++) {
-            char c = string.charAt(i);
-            if (Character.getNumericValue(c) > 127) {
-                return get(string, EncodingType.UTF16);
-            }
-        }
-        return get(string, EncodingType.ASCII);
+        return ASCII_CHECK_REGEX.matcher(string).matches() ? get(string, EncodingType.ASCII) : get(string, EncodingType.UTF16);
     }
-    
+
     private BPString(String value, EncodingType encodingType) {
         this.value = value;
         this.encodingType = encodingType;
