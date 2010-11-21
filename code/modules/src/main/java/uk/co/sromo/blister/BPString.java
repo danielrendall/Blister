@@ -18,8 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BPString extends BPItem {
     private static final Charset ASCII = Charset.forName("ASCII");
     private static final Charset UTF16 = Charset.forName("UTF16");
-    // take advantage of interning of strings to get unique BPString objects
-    private static final Map<String, BPString> cache = new ConcurrentHashMap<String, BPString>(512, 0.75f, 16);
 
     enum EncodingType {ASCII, UTF16};
 
@@ -35,20 +33,20 @@ public class BPString extends BPItem {
     }
 
     static BPString get(String string, EncodingType encodingType) {
-        if (!cache.containsKey(string)) {
-            BPString bpString = new BPString(string, encodingType);
-            cache.put(string, bpString);
-            return bpString;
-        } else {
-            return cache.get(string);
-        }
+        return new BPString(string, encodingType);
     }
 
     // externally created strings are assumed to be unicode
     // TODO - we could be cleverer and check to see if a string can be encoded in ASCII
     public static BPString get(String string) {
-        String roundTripped = ASCII.decode(ASCII.encode(string)).toString();
-        return get(string, roundTripped.equals(string) ? EncodingType.ASCII : EncodingType.UTF16);
+//        String roundTripped = ASCII.decode(ASCII.encode(string)).toString();
+        for (int i=0; i < string.length(); i++) {
+            char c = string.charAt(i);
+            if (Character.getNumericValue(c) > 127) {
+                return get(string, EncodingType.UTF16);
+            }
+        }
+        return get(string, EncodingType.ASCII);
     }
     
     private BPString(String value, EncodingType encodingType) {

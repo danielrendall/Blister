@@ -17,7 +17,6 @@ public class BPInt extends BPItem {
     private final long lValue;
     private final Size size;
     private final boolean isUnsigned;
-    private static final Map<String, BPString> cache = new ConcurrentHashMap<String, BPString>(512, 0.75f, 16);
 
     public static BPInt get(int value) {
         return new BPInt(value);
