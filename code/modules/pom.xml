@@ -4,7 +4,7 @@
     <groupId>uk.co.sromo</groupId>
     <artifactId>blister</artifactId>
     <packaging>jar</packaging>
-    <version>1.8</version>
+    <version>1.9</version>
     <name>blister</name>
     <url>http://maven.apache.org</url>
     <dependencies>
@@ -32,21 +32,33 @@
     </dependencies>
     <build>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>2.3.1</version>
-            <configuration>
-              <source>1.5</source>
-              <target>1.5</target>
-            </configuration>
-          </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
             <plugin>
                 <!-- NOTE: We don't need a groupId specification because the group is
                              org.apache.maven.plugins ...which is assumed by default.
                          -->
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-5</version>
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -60,5 +72,5 @@
 
             </plugin>
         </plugins>
-      </build>
+    </build>
 </project>

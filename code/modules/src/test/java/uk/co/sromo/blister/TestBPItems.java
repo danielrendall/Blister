@@ -26,23 +26,33 @@ public class TestBPItems {
     public final static String ASCII_STRING_1 = "Quite Interesting";
     public final static String ASCII_STRING_2 = "RatherDull";
     public final static String ASCII_STRING_3 = "Normal ASCII string 1234567890";
+    public final static String ASCII_STRING_4 = "I_HAZ_FACT";
+    public final static String ASCII_STRING_5 = "";
 
     public final static String UNICODE_STRING_1 = "Ỡuitὲ InƬerestіng";
     public final static String UNICODE_STRING_2 = "ṜaŦherḒull";
     public final static String UNICODE_STRING_3 = "Non-exotic non-ASCII string ©®ÀÈÌÒÙ";
 
     @Test
-    public void TestBPStringTypeIdentification() {
+    public void TestBPStringTypeIdentificationAsAscii() {
         BPString ascii1 = BPString.get(ASCII_STRING_1);
         Assert.assertEquals("String wasn't ASCII", BPString.EncodingType.ASCII, ascii1.getEncodingType());
-        BPString unicode1 = BPString.get(UNICODE_STRING_1);
-        Assert.assertEquals("String wasn't Unicode", BPString.EncodingType.UTF16, unicode1.getEncodingType());
         BPString ascii2 = BPString.get(ASCII_STRING_2);
         Assert.assertEquals("String wasn't ASCII", BPString.EncodingType.ASCII, ascii2.getEncodingType());
-        BPString unicode2 = BPString.get(UNICODE_STRING_2);
-        Assert.assertEquals("String wasn't Unicode", BPString.EncodingType.UTF16, unicode2.getEncodingType());
         BPString ascii3 = BPString.get(ASCII_STRING_3);
         Assert.assertEquals("String wasn't ASCII", BPString.EncodingType.ASCII, ascii3.getEncodingType());
+        BPString ascii4 = BPString.get(ASCII_STRING_4);
+        Assert.assertEquals("String wasn't ASCII", BPString.EncodingType.ASCII, ascii4.getEncodingType());
+        BPString ascii5 = BPString.get(ASCII_STRING_5);
+        Assert.assertEquals("String wasn't ASCII", BPString.EncodingType.ASCII, ascii5.getEncodingType());
+    }
+
+    @Test
+    public void TestBPStringTypeIdentificationAsUnicode() {
+        BPString unicode1 = BPString.get(UNICODE_STRING_1);
+        Assert.assertEquals("String wasn't Unicode", BPString.EncodingType.UTF16, unicode1.getEncodingType());
+        BPString unicode2 = BPString.get(UNICODE_STRING_2);
+        Assert.assertEquals("String wasn't Unicode", BPString.EncodingType.UTF16, unicode2.getEncodingType());
         BPString unicode3 = BPString.get(UNICODE_STRING_3);
         Assert.assertEquals("String wasn't Unicode", BPString.EncodingType.UTF16, unicode3.getEncodingType());
     }
@@ -274,5 +284,34 @@ public class TestBPItems {
         }
         Assert.assertEquals(32770, count);
 
+    }
+
+    @Test
+    public void testEverythingICanThinkOf() throws BinaryPlistException {
+        BPDict dict = new BPDict()
+                .with("Empty", "")
+                .with("NotEmpty", "Not empty")
+                .with("One", 1)
+                .with("Zero", 0)
+                .with("MinusOne", -1)
+                .with("Large number", Integer.MAX_VALUE)
+                .with("An array", new BPArray()
+                    .with(true)
+                    .with(1)
+                    .with("String"));
+        byte[] bytes = BinaryPlist.encode(dict);
+        BPDict newRoot = (BPDict) BinaryPlist.decode(bytes);
+        Assert.assertEquals("", newRoot.get("Empty", ""));
+        Assert.assertEquals("Not empty", newRoot.get("NotEmpty", ""));
+        Assert.assertEquals(1, newRoot.get("One",999 ));
+        Assert.assertEquals(0, newRoot.get("Zero",999 ));
+        Assert.assertEquals(-1, newRoot.get("MinusOne",999 ));
+        Assert.assertEquals(Integer.MAX_VALUE, newRoot.get("Large number", 0));
+        BPArray array = (BPArray) dict.get("An array");
+        Assert.assertEquals(true, ((BPBoolean) array.get(0)).getValue());
+        Assert.assertEquals(1, ((BPInt) array.get(1)).getValue());
+        Assert.assertEquals("String", ((BPString) array.get(2)).getValue());
+
+        
     }
 }
