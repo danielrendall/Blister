@@ -2,6 +2,7 @@ package uk.co.sromo.blister;
 
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -45,15 +46,16 @@ public class BinaryPlistDecoder {
 
     BPItem decode() throws BinaryPlistException {
 
-        log.info("sortVersion: " + trailer.getSortVersion());
-        log.info("offsetIntSize: " + trailer.getOffsetIntSize());
-        log.info("objectRefSize: " + trailer.getObjectRefSize());
-        log.info("numObjects: " + trailer.getNumObjects());
-        log.info("topObject: " + trailer.getTopObject());
-        log.info("offsetTableOffset: " + trailer.getOffsetTableOffset());
-//        log.info("Data length: " + data.getLength());
-        log.info("Offset table length: " + offsetTable.getSize());
-
+        if (log.isLoggable(Level.FINE)) {
+            log.fine("sortVersion: " + trailer.getSortVersion());
+            log.fine("offsetIntSize: " + trailer.getOffsetIntSize());
+            log.fine("objectRefSize: " + trailer.getObjectRefSize());
+            log.fine("numObjects: " + trailer.getNumObjects());
+            log.fine("topObject: " + trailer.getTopObject());
+            log.fine("offsetTableOffset: " + trailer.getOffsetTableOffset());
+    //        log.fine("Data length: " + data.getLength());
+            log.fine("Offset table length: " + offsetTable.getSize());
+        }
 
         BPItem item = getItemAtIndex((int)(trailer.getTopObject()));
 
