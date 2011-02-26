@@ -17,11 +17,8 @@
 package uk.co.sromo.blister;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 13-Aug-2010
- * Time: 22:39:04
- * To change this template use File | Settings | File Templates.
+ * Implements the Visitor pattern (see GOF book) for performing operations on
+ * trees of BPItem subclasses.
  */
 public interface BPVisitor {
 

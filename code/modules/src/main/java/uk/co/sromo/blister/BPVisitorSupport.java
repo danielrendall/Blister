@@ -17,11 +17,8 @@
 package uk.co.sromo.blister;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 13-Aug-2010
- * Time: 22:42:57
- * To change this template use File | Settings | File Templates.
+ * No-op implementation of BPVisitor - convenient base class for making useful
+ * Visitors.
  */
 public class BPVisitorSupport implements BPVisitor {
     public void visit(BPArray item) {

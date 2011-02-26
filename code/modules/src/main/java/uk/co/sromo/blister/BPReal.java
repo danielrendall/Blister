@@ -17,11 +17,7 @@
 package uk.co.sromo.blister;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 10-Aug-2010
- * Time: 21:43:11
- * To change this template use File | Settings | File Templates.
+ * Represents a Real value - NOT YET IMPLEMENTED
  */
 public class BPReal extends BPItem {
     private final double value;

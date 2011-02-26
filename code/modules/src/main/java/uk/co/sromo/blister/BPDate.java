@@ -19,11 +19,7 @@ package uk.co.sromo.blister;
 import uk.co.sromo.blister.BPItem;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 10-Aug-2010
- * Time: 21:43:27
- * To change this template use File | Settings | File Templates.
+ * Represents a Date in a plist - NOT YET IMPLEMENTED!
  */
 public class BPDate extends BPItem {
     

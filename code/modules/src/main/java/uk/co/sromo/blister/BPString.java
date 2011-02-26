@@ -26,11 +26,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 13-Aug-2010
- * Time: 22:15:00
- * To change this template use File | Settings | File Templates.
+ * Represents a String in a plist. Plists have two different string types - ASCII and
+ * UTF-16. When decoding, this is not a problem, as the serialized plist specifies which
+ * of the two is in use and so the appropriate method can be called to do the decoding
+ * of the raw bytes. When creating a plist, the encoding type to be used is determined
+ * automatically, by inspecting the string to see if it contains all ASCII characters.
+ *
+ * Once created, BPString values are immutable. However, unlike regular Java Strings, 
+ * two separate BPStrings with the same value are separate objects. See discussion in the
+ * BPInt class about the possibility of caching frequently used values and its likely
+ * (lack of) benefit.
  */
 public class BPString extends BPItem {
     private static final Charset ASCII = Charset.forName("ASCII");

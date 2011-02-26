@@ -17,11 +17,7 @@
 package uk.co.sromo.blister;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 10-Aug-2010
- * Time: 21:44:46
- * To change this template use File | Settings | File Templates.
+ * Represents a Uid - NOT YET IMPLEMENTED
  */
 public class BPUid extends BPItem {
     private final byte[] value;

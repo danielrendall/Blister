@@ -26,11 +26,12 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 10-Aug-2010
- * Time: 21:45:25
- * To change this template use File | Settings | File Templates.
+ * Represents a Set in a plist - an unordered collection of BPItems
+ *
+ * All of the 'with' methods return this, enabling them to be chained in a fluent style:
+ * BPSet dict = new BPSet().with("value1").with(2).with(true);
+ * The order in which things are added is unimportant, and no guarantees are made about
+ * the order in which they will be serialized.
  */
 public class BPSet extends BPExpandableItem implements Set<BPItem> {
     private final int[] setItemOffsets;

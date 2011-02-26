@@ -22,11 +22,19 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 10-Aug-2010
- * Time: 21:45:45
- * To change this template use File | Settings | File Templates.
+ * Represents a Dictionary in a plist - a map of key-value pairs where the key is a
+ * string and the value is any BPItem (primitive or collection). Most plists are based
+ * on dictionaries, consequently there are many convenience methods for getting and
+ * setting values.
+ *
+ * All of the 'with' methods return this, enabling them to be chained in a fluent style:
+ * BPDict dict = new BPDict().with("key1", "value1").with("key2", 2).with("key3", true);
+ *
+ * This class has been designed to work well when keys and / or values are enumerated
+ * constants in the client code - these are transparently converted to / from strings
+ * (which, in turn, are converted to / from BPString objects).
+ *
+ * TODO: Verify that this implements Map<BPString, BPItem> satisfactorily.
  */
 public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
     private final int[] keyOffsets;

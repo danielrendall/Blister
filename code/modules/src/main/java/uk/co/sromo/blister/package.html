@@ -1,0 +1,21 @@
+<html>
+<head>
+<title>Blister</title>
+</head>
+<body>
+<p>
+This is the Blister library, a Java library available under the Apache License (v2.0) for 
+manipulating Apple's Binary Plist format. It can deserialize a byte array to produce a
+navigable tree of BPItems representing the plist, and it can take a tree of items and
+serialize them into a byte array.
+</p>
+<p>
+Warning: this library is known to be incomplete - currently it doesn't implement the 
+floating-point or date types. Also, there are potentially issues with signed / unsigned
+values which need to be documented or worked around. In particular, it doesn't represent
+the full range of long values which can be represented in a plist (i.e. the values between
+2^63 and 2^64-1 which can be stored in an unsigned long in C, but can't be represented in
+Java).
+</p>
+</body>
+</html>

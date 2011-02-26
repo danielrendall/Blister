@@ -26,11 +26,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 14-Aug-2010
- * Time: 08:16:31
- * To change this template use File | Settings | File Templates.
+ * TODO: Documentation
  */
 public class BinaryPlistEncoder implements BPVisitor {
 

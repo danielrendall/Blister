@@ -19,11 +19,11 @@ package uk.co.sromo.blister;
 import java.nio.ByteBuffer;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 12-Aug-2010
- * Time: 22:41:27
- * To change this template use File | Settings | File Templates.
+ * Represents the trailer of a binary plist which contains important information about
+ * what int sizes have been used to represent objects in the plist, how many objects have
+ * been written, and which object is the root.
+ *
+ * TODO: Documentation
  */
 class BinaryPlistTrailer {
 

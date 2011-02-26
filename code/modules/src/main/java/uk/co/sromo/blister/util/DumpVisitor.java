@@ -22,11 +22,8 @@ import uk.co.sromo.blister.*;
 import java.util.logging.Logger;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 13-Aug-2010
- * Time: 23:38:59
- * To change this template use File | Settings | File Templates.
+ * Very simple example of a visitor, used to turn a binary plist into XML.
+ * TODO: Write a proper method for indenting with spaces!
  */
 public class DumpVisitor implements BPVisitor {
 

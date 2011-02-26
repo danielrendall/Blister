@@ -17,11 +17,8 @@
 package uk.co.sromo.blister;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 13-Aug-2010
- * Time: 19:12:03
- * To change this template use File | Settings | File Templates.
+ * Represents a boolean value in a plist. There are only two, therefore they're
+ * available as immutable constants TRUE and FALSE.
  */
 public class BPBoolean extends BPItem {
 

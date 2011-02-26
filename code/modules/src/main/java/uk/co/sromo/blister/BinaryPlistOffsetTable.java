@@ -19,11 +19,9 @@ package uk.co.sromo.blister;
 import java.util.logging.Logger;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 12-Aug-2010
- * Time: 23:10:01
- * To change this template use File | Settings | File Templates.
+ * Represents the table of object offsets in a binary plist.
+ *
+ * TODO: Documentation
  */
 class BinaryPlistOffsetTable {
 

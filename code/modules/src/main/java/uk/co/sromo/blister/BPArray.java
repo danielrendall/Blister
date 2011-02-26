@@ -19,11 +19,12 @@ package uk.co.sromo.blister;
 import java.util.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 10-Aug-2010
- * Time: 21:45:07
- * To change this template use File | Settings | File Templates.
+ * Represent an Array in a plist - an ordered list of BPItems.
+ *
+ * All of the 'with' methods return this, enabling them to be chained in a fluent style:
+ * BPArray dict = new BPDict().with("value1").with(2).with(true);
+ * 
+ * TODO: Verify this implements List<BPItem> correctly.
  */
 public class BPArray extends BPExpandableItem implements List<BPItem> {
 

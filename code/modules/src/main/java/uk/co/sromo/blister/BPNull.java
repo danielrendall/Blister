@@ -17,11 +17,7 @@
 package uk.co.sromo.blister;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 10-Aug-2010
- * Time: 21:39:35
- * To change this template use File | Settings | File Templates.
+ * Represents the unique Null value as the static field Instance.
  */
 public class BPNull extends BPItem {
 

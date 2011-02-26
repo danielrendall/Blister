@@ -17,11 +17,7 @@
 package uk.co.sromo.blister;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 13-Aug-2010
- * Time: 00:25:50
- * To change this template use File | Settings | File Templates.
+ * Base class for BPItems which are 'expandable' i.e. the collection classes.
  */
 abstract class BPExpandableItem extends BPItem {
 

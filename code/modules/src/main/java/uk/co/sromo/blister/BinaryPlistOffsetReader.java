@@ -19,11 +19,12 @@ package uk.co.sromo.blister;
 import java.nio.ByteBuffer;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 12-Aug-2010
- * Time: 23:41:46
- * To change this template use File | Settings | File Templates.
+ * Class which will return offsets read from a ByteBuffer. Three implementations are
+ * available, depending on whether the ByteBuffer is representing offsets as bytes,
+ * shorts or ints.
+ *
+ * TODO: This presumably advances a pointer in the ByteBuffer when getOffset is called
+ * - document this behaviour explicitly.
  */
 abstract class BinaryPlistOffsetReader {
 

@@ -20,11 +20,22 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 10-Aug-2010
- * Time: 21:42:57
- * To change this template use File | Settings | File Templates.
+ * Represents an Int in a plist. Plists allow for ints to be both signed and unsigned, and
+ * anything from -(2^63) to 2^63-1 (signed) or 0 to 2^64 - 1 (unsigned). This means that 
+ * their representation in Java is a bit of a mess, since Java just has int and long types,
+ * both of which are signed.
+ *
+ * So, this class stores both an int value and a long value, a size (Int or Long) which tells
+ * you which value is correct, and an additional isUnsigned flag which comes into play when
+ * representing numbers out of the range of Java's long type.
+ *
+ * Once created, BPInt values are immutable. However, two BPInts with the same value will be
+ * two separate objects - there's no interning. This could change (e.g. we could maintain a
+ * cache of most commonly used values) but there's a time - memory trade-off involved and
+ * unless a program uses a lot of plists, it's probably not worth the extra complexity.
+ *
+ * TODO: Document examples. Also consider the TODO in the from() method about returning
+ * unsigned int values between 2^31 and 2^32 - 1
  */
 public class BPInt extends BPItem {
     public enum Size {Int, Long}
@@ -53,6 +64,8 @@ public class BPInt extends BPItem {
         } else if (size == 4) {
             if (highestBitIsSet) {
                 // in this case, we have a number between 2^31 and 2^32 - 1. This won't fit in an int, so we have to force it to be a long
+                // TODO - should we return it as a number of type Int, but marked as isUnsigned, meaning that
+                // clients should use the long value instead? That might be more consistent.
                 return new BPInt(((0xff & (long)bytes[0]) << 24) | ((0xff & (long)bytes[1]) << 16) | ((0xff & (long)bytes[2]) << 8) | (0xff & (long)bytes[3]), false);
             } else {
                 return new BPInt(((0xff & bytes[0]) << 24) | ((0xff & bytes[1]) << 16) | ((0xff & bytes[2]) << 8) | (0xff & bytes[3]));
@@ -69,6 +82,8 @@ public class BPInt extends BPItem {
                 return new BPInt((msb << 32) + lsb, false);
             }
         } else {
+            // size = 16 - this is used to represent unsigned ints between 2^63 and 2^64 - 1 so they
+            // can be distinguished from signed ints between -(2^63) and 0.
             long msb = (long) (((0xff & (long)bytes[8]) << 24) | ((0xff & (long)bytes[9]) << 16) | ((0xff & (long)bytes[10]) << 8) | (0xff & (long)bytes[11]));
             long lsb = (long) (((0xff & (long)bytes[12]) << 24) | ((0xff & (long)bytes[13]) << 16) | ((0xff & (long)bytes[14]) << 8) | (0xff & (long)bytes[15]));
             return new BPInt((msb << 32) + lsb, true);
@@ -99,6 +114,10 @@ public class BPInt extends BPItem {
 
     public Size getSize() {
         return size;
+    }
+    
+    public boolean isUnsigned() {
+        return isUnsigned;
     }
 
     @Override

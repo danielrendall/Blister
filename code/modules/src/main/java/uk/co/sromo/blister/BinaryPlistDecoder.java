@@ -22,11 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 10-Aug-2010
- * Time: 20:49:01
- * To change this template use File | Settings | File Templates.
+ * TODO: Documentation
  */
 public class BinaryPlistDecoder {
 

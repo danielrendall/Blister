@@ -18,11 +18,9 @@ package uk.co.sromo.blister;
 
 import uk.co.sromo.blister.util.DumpVisitor;
 /**
- * Created by IntelliJ IDEA.
- * User: daniel
- * Date: 14-Aug-2010
- * Time: 08:15:32
- * To change this template use File | Settings | File Templates.
+ * This class is the main entrypoint for using Blister to encode a BPlist
+ * as a byte array, or to decode a byte array into a BPlist.
+ * The convenience method to dump a BPlist as XML may be useful.
  */
 public class BinaryPlist {
     final static short NULL = (short) 0x00;
@@ -45,6 +43,12 @@ public class BinaryPlist {
     final static short UNUSED_4 = (short) 0xe0; // mask
     final static short UNUSED_5 = (short) 0xf0; // mask
 
+    /**
+     * Decodes the supplied binary plist data and returns a BPItem representing the
+     * root item of the plist, which you'll need to cast to the appropriate
+     * type (most likely a BPDict)
+     * TODO: Parameters
+     */
     public static BPItem decode(byte[] rawData) throws BinaryPlistException {
         if (rawData.length < 40) {
             throw new BinaryPlistException("Byte array not long enough");
@@ -80,6 +84,11 @@ public class BinaryPlist {
 
     }
 
+    /**
+     * Encodes the supplied plist (represented by its root BPItem) as binary
+     * plist data.
+     * TODO: Params
+     */
     public static byte[] encode(BPItem root) throws BinaryPlistException {
         if (!root.canBeRoot()) {
             throw new BinaryPlistException("BPItem of type " + root.getType() + " can't be the root of a Binary PList");
@@ -90,6 +99,10 @@ public class BinaryPlist {
         return encoder.getBytes();
     }
 
+    /**
+     * Dumps the supplied BPItem as XML which is then returned. Useful for debugging.
+     * TODO: Params
+     */
     public static String dump(BPItem root) {
         DumpVisitor dv = new DumpVisitor();
         root.accept(dv);
