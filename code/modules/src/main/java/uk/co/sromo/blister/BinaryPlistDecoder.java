@@ -135,7 +135,7 @@ public class BinaryPlistDecoder {
                             log.fine(String.format("Real %d bytes", numRealBytes));
                             byte[] realData = new byte[numRealBytes];
                             data.get(realData);
-                            toReturn = new BPReal(realData);
+                            toReturn = BPReal.from(realData);
                             break;
                         case BinaryPlist.DATA:
                             int numDataBytes = (littleNibble < 0x0f) ? littleNibble : readAnInt();

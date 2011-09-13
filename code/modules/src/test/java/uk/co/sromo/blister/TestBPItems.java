@@ -235,9 +235,10 @@ public class TestBPItems {
         BPItem root = BinaryPlist.decode(bytes);
         Assert.assertEquals("Not a dictionary", BPItem.Type.Dict, root.getType());
         log.fine(BinaryPlist.dump(root));
-        Assert.assertEquals(1, (((BPDict) root).get("Int0", 0)));
+        final BPDict rootDict = (BPDict) root;
+        Assert.assertEquals(1, (rootDict.get("Int0", 0)));
         for (int i=0; i<64; i++) {
-            BPInt theInt = (BPInt)(((BPDict) root).get("Int" + i));
+            BPInt theInt = (BPInt)(rootDict.get("Int" + i));
             if (i < 31) {
                 Assert.assertEquals("Testing 1 << " + i, ((long)1 << i), theInt.getValue());
             } else {
@@ -245,16 +246,16 @@ public class TestBPItems {
             }
         }
 
-        Assert.assertEquals(1 << 1, (((BPDict) root).get("Int1", 0)));
-        Assert.assertEquals(1 << 15, (((BPDict) root).get("Int15", 0)));
-        Assert.assertEquals(1 << 16, (((BPDict) root).get("Int16", 0)));
-        Assert.assertEquals(1 << 30, (((BPDict) root).get("Int30", 0)));
-        Assert.assertEquals(1 << 31, (((BPDict) root).get("Int31", 0)));
-        Assert.assertEquals(-(1 << 1), (((BPDict) root).get("Int-1", 0)));
-        Assert.assertEquals(-(1 << 15), (((BPDict) root).get("Int-15", 0)));
-        Assert.assertEquals(-(1 << 16), (((BPDict) root).get("Int-16", 0)));
-        Assert.assertEquals(-(1 << 30), (((BPDict) root).get("Int-30", 0)));
-        Assert.assertEquals(-(1 << 31), (((BPDict) root).get("Int-31", 0)));
+        Assert.assertEquals(1 << 1, (rootDict.get("Int1", 0)));
+        Assert.assertEquals(1 << 15, (rootDict.get("Int15", 0)));
+        Assert.assertEquals(1 << 16, (rootDict.get("Int16", 0)));
+        Assert.assertEquals(1 << 30, (rootDict.get("Int30", 0)));
+        Assert.assertEquals(1 << 31, (rootDict.get("Int31", 0)));
+        Assert.assertEquals(-(1 << 1), (rootDict.get("Int-1", 0)));
+        Assert.assertEquals(-(1 << 15), (rootDict.get("Int-15", 0)));
+        Assert.assertEquals(-(1 << 16), (rootDict.get("Int-16", 0)));
+        Assert.assertEquals(-(1 << 30), (rootDict.get("Int-30", 0)));
+        Assert.assertEquals(-(1 << 31), (rootDict.get("Int-31", 0)));
     }
 
     @Test
@@ -263,7 +264,14 @@ public class TestBPItems {
         byte[] bytes = IOUtils.toByteArray(stream);
         BPItem root = BinaryPlist.decode(bytes);
         Assert.assertEquals("Not a dictionary", BPItem.Type.Dict, root.getType());
+        BPDict rootDict = (BPDict) root;
         log.fine(BinaryPlist.dump(root));
+        String zeroes = "00000000";
+        for (int i=1; i<=7; i++) {
+            String sFloat = "1" + zeroes.substring(0, i-1) + ".1";
+            float expected = Float.parseFloat(sFloat);
+            Assert.assertEquals(expected, rootDict.get("Float" + i, 0.0f), 0.2f);
+        }
     }
 
     @Test

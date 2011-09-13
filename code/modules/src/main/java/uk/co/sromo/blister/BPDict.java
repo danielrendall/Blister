@@ -156,13 +156,22 @@ public class BPDict extends BPExpandableItem implements Map<BPString, BPItem> {
         return ((BPBoolean) value).getValue();
     }
 
+    public float get(BPString bpKey, float fallback) throws BinaryPlistException {
+        if (!containsKey(bpKey)) return fallback;
+        BPItem value = get(bpKey);
+        if (value.getType() != BPItem.Type.Real) {
+            throw new BinaryPlistException("Not a real");
+        }
+        return ((BPReal) value).getFloatValue();
+    }
+
     public double get(BPString bpKey, double fallback) throws BinaryPlistException {
         if (!containsKey(bpKey)) return fallback;
         BPItem value = get(bpKey);
         if (value.getType() != BPItem.Type.Real) {
             throw new BinaryPlistException("Not a real");
         }
-        return ((BPReal) value).getValue();
+        return ((BPReal) value).getDoubleValue();
     }
 
     public <T extends Enum<T>> T get(BPString bpKey, T fallback) throws BinaryPlistException {
